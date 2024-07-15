@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url'
 
 // Collections
 import Users from '@/collections/Users'
+import Items from '@/collections/Items'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -17,7 +18,7 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   //editor: slateEditor({}),
   editor: lexicalEditor(),
-  collections: [Users],
+  collections: [Users, Items],
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
