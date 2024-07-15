@@ -19,6 +19,7 @@ const Items: CollectionConfig = {
       type: 'select',
       required: true,
       hasMany: true,
+      defaultValue: ['poor', 'common', 'uncommon', 'rare', 'epic', 'legendary', 'unique'],
       options: [
         {
           label: 'Poor',
@@ -55,6 +56,17 @@ const Items: CollectionConfig = {
       type: 'select',
       required: true,
       hasMany: true,
+      defaultValue: [
+        'barbarian',
+        'bard',
+        'cleric',
+        'druid',
+        'fighter',
+        'ranger',
+        'rouge',
+        'warlock',
+        'wizard',
+      ],
       options: [
         {
           label: 'Barbarian',
