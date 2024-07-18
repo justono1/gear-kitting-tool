@@ -38,7 +38,18 @@ export default function Slot({ item, slotted }: SlotProps) {
 
   return (
     <div className={classes([css.slot, { [css.slotted]: slotted }, css[slotSize]])}>
-      <h3>{itemName}</h3>
+      {slotSize === 'largeTwo' ? <DoubleSlotData item={item} /> : <SingleSlotData item={item} />}
     </div>
+  )
+}
+
+const SingleSlotData = ({ item }: SlotProps) => <h3>{item.itemName}</h3>
+
+const DoubleSlotData = ({ item }: SlotProps) => {
+  return (
+    <>
+      <h3>{item.itemName}</h3>
+      <h3>{item.itemName}</h3>
+    </>
   )
 }

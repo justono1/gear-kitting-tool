@@ -13,15 +13,15 @@ const Page = () => {
             <button type="submit">Share Kit</button>
           </div>
         </header>
-        <Slot item={{ slot: 'primaryWeapon' }} slotted={true} />
+        <Slot item={{ itemName: 'I N', slot: 'primaryWeapon' }} slotted={true} />
         <br></br>
-        <Slot item={{ slot: 'head' }} />
+        <Slot item={{ itemName: 'I N', slot: 'head' }} />
         <br></br>
-        <Slot item={{ slot: 'chest' }} />
+        <Slot item={{ itemName: 'I N', slot: 'chest' }} />
         <br></br>
-        <Slot item={{ slot: 'utility' }} />
+        <Slot item={{ itemName: 'I N', slot: 'utility' }} />
         <br></br>
-        <Slot item={{ slot: 'ring' }} />
+        <Slot item={{ itemName: 'I N', slot: 'ring' }} />
       </main>
     </>
   )
