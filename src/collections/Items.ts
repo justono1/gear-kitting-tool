@@ -174,7 +174,7 @@ const Items: CollectionConfig = {
     {
       name: 'type',
       type: 'select',
-      required: true,
+      hasMany: true,
       options: [
         {
           label: 'Arrow',
@@ -317,7 +317,6 @@ const Items: CollectionConfig = {
     {
       name: 'staticAttribute',
       type: 'select',
-      required: true,
       hasMany: true,
       options: [
         {
