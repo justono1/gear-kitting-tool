@@ -1,0 +1,35 @@
+@import '@/scss/variables.scss';
+
+.slot {
+  background: $color-gray-2;
+  border: 1px solid $color-gray-3;
+}
+
+.slotted {
+  background: $color-gray-3;
+}
+
+.largeTwo {
+  width: 170px;
+  height: 200px;
+}
+
+.large {
+  width: 150px;
+  height: 200px;
+}
+
+.medium {
+  width: 100px;
+  height: 100px;
+}
+
+.small {
+  width: 75px;
+  height: 75px;
+}
+
+.tiny {
+  width: 50px;
+  height: 50px;
+}

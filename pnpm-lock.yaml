@@ -30,6 +30,9 @@ dependencies:
   babel-plugin-react-compiler:
     specifier: ^0.0.0-experimental-592953e-20240517
     version: 0.0.0-experimental-696af53-20240625
+  classnames:
+    specifier: ^2.5.1
+    version: 2.5.1
   cross-env:
     specifier: ^7.0.3
     version: 7.0.3
