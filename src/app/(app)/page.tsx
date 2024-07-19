@@ -1,21 +1,28 @@
+import css from './page.module.scss'
 import ClassLayout from '@/components/ClassLayout/ClassLayout'
-import Slot from '@/components/Slot/Slot'
 import Link from 'next/link'
 import React from 'react'
 
 const Page = () => {
   return (
     <>
-      <main>
-        <header>
-          <h1>Gear Kitting Tool</h1>
-          <div className={'formControl'}>
-            <input type="text" />
-            <button type="submit">Share Kit</button>
-          </div>
-        </header>
+      <header className={css.header}>
+        <h1>
+          Gear Kitting Tool <small>v0.1</small>
+        </h1>
+        <div className={css.shareBox}>
+          <input
+            className={css.inputText}
+            type="text"
+            value={'https://gearkittingtool.com/share/1231h-231h23jjjj'}
+          />
+          <button className={css.button}>Share Kit</button>
+        </div>
+      </header>
+      <section>
+        <div></div>
         <ClassLayout />
-      </main>
+      </section>
     </>
   )
 }

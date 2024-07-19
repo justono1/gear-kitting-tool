@@ -11,7 +11,18 @@ const inter = Inter({
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <html className={inter.className}>
-      <body>{children}</body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap"
+          rel="stylesheet"
+        ></link>
+      </head>
+
+      <body>
+        <main>{children}</main>
+      </body>
     </html>
   )
 }
