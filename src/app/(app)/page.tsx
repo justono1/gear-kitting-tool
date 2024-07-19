@@ -4,6 +4,7 @@ import ClassLayout from '@/components/ClassLayout/ClassLayout'
 import InputRadio from '@/components/InputRadio/InputRadio'
 import Link from 'next/link'
 import React from 'react'
+import Collapsible from '@/components/Collapsible/Collapsible'
 
 const Page = () => {
   return (
@@ -36,6 +37,42 @@ const Page = () => {
               <InputRadio name="class" value="warlock" label={'Warlock'} />
               <InputRadio name="class" value="wizard" label={'Wizard'} />
             </div>
+          </div>
+
+          <div className={css.itemSectionContainer}>
+            <h2>Items:</h2>
+            <Collapsible title="Head">
+              <Collapsible title="Plate" innerHeader={true}>
+                <Collapsible title="Item Name" innerHeader={true}>
+                  <div>Poor</div>
+                  <div>Common</div>
+                  <div>Uncommon</div>
+                </Collapsible>
+                <Collapsible title="Item Name" innerHeader={true}>
+                  <div>Poor</div>
+                  <div>Common</div>
+                  <div>Uncommon</div>
+                </Collapsible>
+              </Collapsible>
+              <Collapsible title="Leather" innerHeader={true}>
+                <div>Item 1</div>
+                <div>Item 2</div>
+              </Collapsible>
+              <Collapsible title="Cloth" innerHeader={true}>
+                <div>Item 1</div>
+                <div>Item 2</div>
+              </Collapsible>
+            </Collapsible>
+            <Collapsible title="Chest" />
+            <Collapsible title="Legs" />
+            <Collapsible title="Feet" />
+            <Collapsible title="Hands" />
+            <Collapsible title="Primary Weapon" />
+            <Collapsible title="Secondary Weapon" />
+            <Collapsible title="Back" />
+            <Collapsible title="Necklace" />
+            <Collapsible title="Rings" />
+            <Collapsible title="Utility" />
           </div>
         </div>
         <div className={css.slotColumn}>
