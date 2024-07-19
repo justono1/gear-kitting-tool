@@ -1,0 +1,34 @@
+@import '@/scss/variables.scss';
+
+.slot {
+  background: $color-gray-2;
+  border: 1px solid $color-gray-3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  &:hover {
+    background: lighten($color-gray-2, 12%);
+  }
+}
+
+.slotted {
+  background: $color-gray-3;
+}
+
+.slotOuter {
+  position: relative;
+  width: 170px;
+  height: 200px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.slotInner {
+  width: 84px;
+  height: 200px;
+}
+
+.sameItem {
+  opacity: 0.3;
+}

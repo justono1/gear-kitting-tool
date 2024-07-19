@@ -3,15 +3,17 @@
 .slot {
   background: $color-gray-2;
   border: 1px solid $color-gray-3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  &:hover {
+    background: lighten($color-gray-2, 12%);
+  }
 }
 
 .slotted {
   background: $color-gray-3;
-}
-
-.largeTwo {
-  width: 170px;
-  height: 200px;
 }
 
 .large {

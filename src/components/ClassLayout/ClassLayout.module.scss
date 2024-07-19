@@ -1,0 +1,96 @@
+@import '@/scss/variables.scss';
+
+.classLayout {
+  position: relative;
+  width: 620px;
+  height: 704px;
+}
+
+.classSlot {
+  position: absolute;
+}
+
+.primaryWeapon {
+  top: 0;
+  left: 0;
+}
+
+.secondaryWeapon {
+  top: 0;
+  right: 0;
+}
+
+.head {
+  top: 100px;
+  left: 260px;
+}
+
+.necklace {
+  top: 150px;
+  left: 380px;
+}
+
+.hands {
+  top: 220px;
+  left: 115px;
+}
+
+.chest {
+  top: 220px;
+  left: 235px;
+}
+
+.back {
+  top: 220px;
+  left: 405px;
+}
+
+.ring1 {
+  top: 440px;
+  left: 165px;
+}
+
+.legs {
+  top: 440px;
+  left: 235px;
+}
+
+.ring2 {
+  top: 440px;
+  left: 405px;
+}
+
+.feet {
+  top: 540px;
+  left: 405px;
+}
+
+.utility1 {
+  top: 375px;
+  left: 0;
+}
+
+.utility2 {
+  top: 470px;
+  left: 0;
+}
+
+.utility3 {
+  top: 565px;
+  left: 0;
+}
+
+.utility4 {
+  top: 375px;
+  right: 0;
+}
+
+.utility5 {
+  top: 470px;
+  right: 0;
+}
+
+.utility6 {
+  top: 565px;
+  right: 0;
+}
