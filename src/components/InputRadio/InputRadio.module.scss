@@ -1,0 +1,47 @@
+@import '@/scss/variables.scss';
+
+.radioButtonLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+  font-weight: $font-weight-medium;
+}
+
+.radioButtonInput {
+  display: none;
+}
+
+.customRadioButton {
+  width: 20px;
+  height: 20px;
+  background-color: $color-gray-4;
+  border-radius: 50%;
+  margin-right: 10px;
+  position: relative;
+  transition: background-color 0.3s;
+
+  &:after {
+    content: '';
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: $color-gray-1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.3s;
+  }
+}
+
+.radioButtonInput:checked + .customRadioButton {
+  &:after {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.radioButtonInput:focus + .customRadioButton {
+  outline: #1e90ff;
+}
