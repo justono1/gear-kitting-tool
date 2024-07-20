@@ -5,9 +5,59 @@ import InputRadio from '@/components/InputRadio/InputRadio'
 import Link from 'next/link'
 import React from 'react'
 import Collapsible from '@/components/Collapsible/Collapsible'
-import Item from '@/components/Item/Item'
+import ItemButton from '@/components/ItemButton/ItemButton'
+import { getPayload } from '@/utils/payload'
+import { Item } from 'payload-types'
 
-const Page = () => {
+// type marketItemList = [ {[key: string]: marketItemList | string }];
+
+interface MarketItemList {
+  [slot: string]: {
+    [primaryType: string]: {
+      [itemName: string]: {
+        [rarity: string]: Item[]
+      }
+    }
+  }
+}
+
+export default async function Page() {
+  const payload = await getPayload()
+
+  const itemDataResponse = await payload.find({
+    collection: 'items',
+    limit: -1,
+  })
+
+  const itemData = itemDataResponse.docs
+  const marketItemList = itemData.reduce<MarketItemList>((acc, item) => {
+    const { slot, type, itemName, rarity } = item
+    const primaryType = type && type.length > 0 ? type[0] : 'unknown'
+
+    if (!acc[slot]) {
+      acc[slot] = {}
+    }
+
+    if (!acc[slot][primaryType]) {
+      acc[slot][primaryType] = {}
+    }
+
+    if (!acc[slot][primaryType][itemName]) {
+      acc[slot][primaryType][itemName] = {}
+    }
+
+    rarity.forEach((r) => {
+      if (!acc[slot][primaryType][itemName][r]) {
+        acc[slot][primaryType][itemName][r] = []
+      }
+      acc[slot][primaryType][itemName][r].push(item)
+    })
+
+    return acc
+  }, {})
+
+  console.log(JSON.stringify(marketItemList))
+
   return (
     <>
       <header className={css.header}>
@@ -45,14 +95,14 @@ const Page = () => {
             <Collapsible title="Head">
               <Collapsible title="Plate" innerHeader={true}>
                 <Collapsible title="Item Name" innerHeader={true}>
-                  <Item>Poor</Item>
-                  <Item>Common</Item>
-                  <Item>Uncommon</Item>
+                  <ItemButton>Poor</ItemButton>
+                  <ItemButton>Common</ItemButton>
+                  <ItemButton>Uncommon</ItemButton>
                 </Collapsible>
                 <Collapsible title="Item Name" innerHeader={true}>
-                  <Item>Poor</Item>
-                  <Item>Common</Item>
-                  <Item>Uncommon</Item>
+                  <ItemButton>Poor</ItemButton>
+                  <ItemButton>Common</ItemButton>
+                  <ItemButton>Uncommon</ItemButton>
                 </Collapsible>
               </Collapsible>
               <Collapsible title="Leather" innerHeader={true}>
@@ -83,5 +133,3 @@ const Page = () => {
     </>
   )
 }
-
-export default Page
