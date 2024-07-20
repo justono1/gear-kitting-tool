@@ -7,6 +7,8 @@
     background-color: $color-gray-2;
     color: $color-gray-4;
     padding: 10px;
+    display: flex;
+    align-items: center;
     cursor: pointer;
     font-weight: $font-weight-bold;
     &.innerHeader {
@@ -23,12 +25,16 @@
       margin-left: 10px;
 
       .header {
-        padding: 5px;
+        padding: 3px;
       }
 
       .content {
-        padding: 5px;
+        padding: 3px;
       }
     }
   }
+}
+
+.arrow {
+  margin-right: 10px;
 }

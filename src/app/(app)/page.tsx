@@ -5,6 +5,7 @@ import InputRadio from '@/components/InputRadio/InputRadio'
 import Link from 'next/link'
 import React from 'react'
 import Collapsible from '@/components/Collapsible/Collapsible'
+import Item from '@/components/Item/Item'
 
 const Page = () => {
   return (
@@ -44,14 +45,14 @@ const Page = () => {
             <Collapsible title="Head">
               <Collapsible title="Plate" innerHeader={true}>
                 <Collapsible title="Item Name" innerHeader={true}>
-                  <div>Poor</div>
-                  <div>Common</div>
-                  <div>Uncommon</div>
+                  <Item>Poor</Item>
+                  <Item>Common</Item>
+                  <Item>Uncommon</Item>
                 </Collapsible>
                 <Collapsible title="Item Name" innerHeader={true}>
-                  <div>Poor</div>
-                  <div>Common</div>
-                  <div>Uncommon</div>
+                  <Item>Poor</Item>
+                  <Item>Common</Item>
+                  <Item>Uncommon</Item>
                 </Collapsible>
               </Collapsible>
               <Collapsible title="Leather" innerHeader={true}>
