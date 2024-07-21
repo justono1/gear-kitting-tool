@@ -5,8 +5,8 @@ import React, { createContext, useReducer, useContext, ReactNode } from 'react'
 
 // Define the shape of the state
 interface GearState {
-  primaryWeapon: Item | null
-  secondaryWeapon: Item | null
+  primaryWeapon: { leftItem: Item; rightItem: Item } | null
+  secondaryWeapon: { leftItem: Item; rightItem: Item } | null
   head: Item | null
   necklace: Item | null
   hands: Item | null
