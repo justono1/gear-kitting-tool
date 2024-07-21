@@ -1,5 +1,6 @@
 'use client'
 
+import { v4 as uuidv4 } from 'uuid'
 import { Item } from 'payload-types'
 import css from './MarketBrowser.module.scss'
 import { useMemo, useState } from 'react'
@@ -42,7 +43,7 @@ export type CharacterClass =
 
 export default function MarketBrowser({ data }: MarketBrowserProps) {
   const { updateSlot } = useGear()
-  const [selectedCharacterClass, setSelectedCharacterClass] = useState<CharacterClass>('barbarian')
+  const [selectedCharacterClass, setSelectedCharacterClass] = useState<CharacterClass>('fighter')
 
   const marketItemList = useMemo(() => {
     const filteredData = data.filter((item) => item.class.includes(selectedCharacterClass))
@@ -128,7 +129,10 @@ export default function MarketBrowser({ data }: MarketBrowserProps) {
                     {rarityOrder.map(
                       (rarity) =>
                         rarities[rarity] && (
-                          <ItemButton key={rarity} onClick={() => updateSlot(rarities[rarity][0])}>
+                          <ItemButton
+                            key={`${uuidv4()}-${rarity}`}
+                            onClick={() => updateSlot(rarities[rarity][0])}
+                          >
                             {rarity}
                           </ItemButton>
                         ),

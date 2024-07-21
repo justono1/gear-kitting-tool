@@ -7,11 +7,13 @@ import css from './ClassLayout.module.scss'
 import classes from 'classnames'
 
 export default function ClassLayout() {
-  const { state } = useGear()
+  const { state, currentGearScore } = useGear()
+
+  const gearScore = currentGearScore()
 
   return (
     <section>
-      <h2>Gear Score: 124</h2>
+      <h2>Gear Score: {gearScore}</h2>
       <div className={css.classLayout}>
         <DoubleSlot
           className={classes([css.classSlot, css.weapon1])}

@@ -49,6 +49,117 @@ const initialState: GearState = {
   utility6: null,
 }
 
+const gearScoreTable: { [key: string]: { [rarity: string]: number } } = {
+  primaryWeapon: {
+    poor: 1,
+    common: 2,
+    uncommon: 27,
+    rare: 36,
+    epic: 54,
+    legendary: 72,
+    unique: 125,
+  },
+  twoHanded: {
+    poor: 2,
+    common: 4,
+    uncommon: 45,
+    rare: 60,
+    epic: 90,
+    legendary: 120,
+    unique: 175,
+  },
+  secondaryWeapon: {
+    poor: 1,
+    common: 2,
+    uncommon: 21,
+    rare: 28,
+    epic: 42,
+    legendary: 56,
+    unique: 100,
+  },
+  head: {
+    poor: 1,
+    common: 1,
+    uncommon: 12,
+    rare: 16,
+    epic: 24,
+    legendary: 32,
+    unique: 40,
+  },
+  hands: {
+    poor: 1,
+    common: 1,
+    uncommon: 12,
+    rare: 16,
+    epic: 24,
+    legendary: 32,
+    unique: 40,
+  },
+  feet: {
+    poor: 1,
+    common: 1,
+    uncommon: 12,
+    rare: 16,
+    epic: 24,
+    legendary: 32,
+    unique: 40,
+  },
+  chest: {
+    poor: 1,
+    common: 1,
+    uncommon: 15,
+    rare: 20,
+    epic: 30,
+    legendary: 40,
+    unique: 50,
+  },
+  legs: {
+    poor: 1,
+    common: 1,
+    uncommon: 15,
+    rare: 20,
+    epic: 30,
+    legendary: 40,
+    unique: 50,
+  },
+  back: {
+    poor: 1,
+    common: 1,
+    uncommon: 15,
+    rare: 20,
+    epic: 30,
+    legendary: 40,
+    unique: 50,
+  },
+  necklace: {
+    poor: 0,
+    common: 0,
+    uncommon: 9,
+    rare: 12,
+    epic: 18,
+    legendary: 24,
+    unique: 30,
+  },
+  ring: {
+    poor: 0,
+    common: 0,
+    uncommon: 9,
+    rare: 12,
+    epic: 18,
+    legendary: 24,
+    unique: 30,
+  },
+  utility: {
+    poor: 0,
+    common: 0,
+    uncommon: 6,
+    rare: 8,
+    epic: 12,
+    legendary: 16,
+    unique: 20,
+  },
+}
+
 // Define action types
 const UPDATE_SLOT = 'UPDATE_SLOT'
 const DELETE_SLOT = 'DELETE_SLOT'
@@ -199,6 +310,7 @@ interface GearContextValue {
     slot: 'weapon1' | 'weapon2',
     weaponType: 'primaryWeapon' | 'secondaryWeapon',
   ) => void
+  currentGearScore: () => number
 }
 
 // Create context
@@ -239,8 +351,35 @@ export const GearProvider = ({ children }: GearProviderProps) => {
     })
   }
 
+  // Method to calculate the current gear score
+  const currentGearScore = (): number => {
+    const getGearScore = (
+      item: Item | null | undefined,
+      slot: GearSlots | 'primaryWeapon' | 'secondaryWeapon', // extend GearSlots to make it easier to collect gearscore math
+    ): number => {
+      if (!item) return 0
+      const rarity = item.rarity[0]
+      if (item.slot === 'primaryWeapon' || item.slot === 'secondaryWeapon') {
+        const weaponType = item.handType === 'twoHanded' ? 'twoHanded' : item.slot
+        return gearScoreTable[weaponType][rarity] || 0
+      }
+      return gearScoreTable[slot]?.[rarity] || 0
+    }
+
+    let totalScore = 0
+    for (const slot of Object.keys(state) as GearSlots[]) {
+      if (slot === 'weapon1' || slot === 'weapon2') {
+        totalScore += getGearScore(state[slot]?.primaryWeapon, 'primaryWeapon')
+        totalScore += getGearScore(state[slot]?.secondaryWeapon, 'secondaryWeapon')
+      } else {
+        totalScore += getGearScore(state[slot], slot)
+      }
+    }
+    return totalScore
+  }
+
   return (
-    <GearContext.Provider value={{ state, updateSlot, deleteSlot, deleteWeapon }}>
+    <GearContext.Provider value={{ state, updateSlot, deleteSlot, deleteWeapon, currentGearScore }}>
       {children}
     </GearContext.Provider>
   )
