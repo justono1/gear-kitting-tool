@@ -52,6 +52,7 @@ const initialState: GearState = {
 // Define action types
 const UPDATE_SLOT = 'UPDATE_SLOT'
 const DELETE_SLOT = 'DELETE_SLOT'
+const DELETE_WEAPON = 'DELETE_WEAPON'
 
 // Define the shape of the actions
 interface UpdateSlotAction {
@@ -69,7 +70,15 @@ interface DeleteSlotAction {
   }
 }
 
-type GearAction = UpdateSlotAction | DeleteSlotAction
+interface DeleteWeaponAction {
+  type: typeof DELETE_WEAPON
+  payload: {
+    slot: 'weapon1' | 'weapon2'
+    weaponType: 'primaryWeapon' | 'secondaryWeapon'
+  }
+}
+
+type GearAction = UpdateSlotAction | DeleteSlotAction | DeleteWeaponAction
 
 // Helper function to find the first available slot
 const findFirstAvailableSlot = (state: GearState, item: Item): keyof GearState | null => {
@@ -161,15 +170,20 @@ const gearReducer = (state: GearState, action: GearAction): GearState => {
       }
       return state
     case DELETE_SLOT:
-      if (action.payload.slot === 'weapon1' || action.payload.slot === 'weapon2') {
-        return {
-          ...state,
-          [action.payload.slot]: { primaryWeapon: null, secondaryWeapon: null },
-        }
-      }
       return {
         ...state,
         [action.payload.slot]: null,
+      }
+    case DELETE_WEAPON:
+      const weaponSlot = { ...state[action.payload.slot] } as WeaponSlot
+      if (action.payload.weaponType === 'primaryWeapon') {
+        weaponSlot.primaryWeapon = null
+      } else if (action.payload.weaponType === 'secondaryWeapon') {
+        weaponSlot.secondaryWeapon = null
+      }
+      return {
+        ...state,
+        [action.payload.slot]: weaponSlot,
       }
     default:
       return state
@@ -181,6 +195,10 @@ interface GearContextValue {
   state: GearState
   updateSlot: (item: Item) => void
   deleteSlot: (slot: keyof GearState) => void
+  deleteWeapon: (
+    slot: 'weapon1' | 'weapon2',
+    weaponType: 'primaryWeapon' | 'secondaryWeapon',
+  ) => void
 }
 
 // Create context
@@ -210,8 +228,19 @@ export const GearProvider = ({ children }: GearProviderProps) => {
     })
   }
 
+  // Action creator for deleting a weapon
+  const deleteWeapon = (
+    slot: 'weapon1' | 'weapon2',
+    weaponType: 'primaryWeapon' | 'secondaryWeapon',
+  ) => {
+    dispatch({
+      type: DELETE_WEAPON,
+      payload: { slot, weaponType },
+    })
+  }
+
   return (
-    <GearContext.Provider value={{ state, updateSlot, deleteSlot }}>
+    <GearContext.Provider value={{ state, updateSlot, deleteSlot, deleteWeapon }}>
       {children}
     </GearContext.Provider>
   )

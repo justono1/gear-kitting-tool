@@ -2,16 +2,17 @@ import { Item } from 'payload-types'
 import { useMemo } from 'react'
 import classes from 'classnames'
 import css from './DoubleSlot.module.scss'
-import { GearSlots } from '@/providers/GearProvider'
+import { GearSlots, useGear } from '@/providers/GearProvider'
 
 interface DoubleSlotProps {
   leftItem?: Partial<Item> | null
   rightItem?: Partial<Item> | null
-  slotSlug: GearSlots
+  slotSlug: 'weapon1' | 'weapon2'
   className?: string
 }
 
 export default function DoubleSlot({ leftItem, rightItem, slotSlug, className }: DoubleSlotProps) {
+  const { deleteWeapon } = useGear()
   const isTwoHanded = useMemo(() => {
     if (leftItem?.handType === 'twoHanded') {
       return true
@@ -33,9 +34,9 @@ export default function DoubleSlot({ leftItem, rightItem, slotSlug, className }:
     return false
   }, [isTwoHanded, rightItem])
 
-  const handleSlotRightCLick = (event: any, side: 'leftItem' | 'rightItem') => {
+  const handleSlotRightCLick = (event: any, weaponType: 'primaryWeapon' | 'secondaryWeapon') => {
     event.preventDefault()
-    console.log('removed: ', slotSlug, side)
+    deleteWeapon(slotSlug, weaponType)
   }
 
   return (
@@ -43,7 +44,7 @@ export default function DoubleSlot({ leftItem, rightItem, slotSlug, className }:
       <div
         className={classes([css.slot, { [css.slotted]: isLeftSlotted }, css.slotInner])}
         onContextMenu={(event) => {
-          handleSlotRightCLick(event, 'leftItem')
+          handleSlotRightCLick(event, 'primaryWeapon')
         }}
       >
         {leftItem && leftItem.itemName && <h3>{leftItem.itemName}</h3>}
@@ -52,7 +53,7 @@ export default function DoubleSlot({ leftItem, rightItem, slotSlug, className }:
       <div
         className={classes([css.slot, { [css.slotted]: isRightItemSlotted }, css.slotInner])}
         onContextMenu={(event) => {
-          handleSlotRightCLick(event, isTwoHanded ? 'leftItem' : 'rightItem')
+          handleSlotRightCLick(event, isTwoHanded ? 'primaryWeapon' : 'secondaryWeapon')
         }}
       >
         <h3 className={classes([{ [css.sameItem]: isTwoHanded }])}>
