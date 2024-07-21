@@ -131,7 +131,7 @@ export default function MarketBrowser({ data }: MarketBrowserProps) {
                         rarities[rarity] && (
                           <ItemButton
                             key={`${uuidv4()}-${rarity}`}
-                            onClick={() => updateSlot(rarities[rarity][0])}
+                            onClick={() => updateSlot(rarities[rarity][0], rarity.toLowerCase())}
                           >
                             {rarity}
                           </ItemButton>

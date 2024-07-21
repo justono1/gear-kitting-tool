@@ -5,48 +5,63 @@ import React, { createContext, useReducer, useContext, ReactNode } from 'react'
 
 // Define the shape of the state
 interface GearState {
-  weapon1: { primaryWeapon: Item | null; secondaryWeapon: Item | null } | null
-  weapon2: { primaryWeapon: Item | null; secondaryWeapon: Item | null } | null
-  head: Item | null
-  necklace: Item | null
-  hands: Item | null
-  chest: Item | null
-  back: Item | null
-  ring1: Item | null
-  legs: Item | null
-  ring2: Item | null
-  feet: Item | null
-  utility1: Item | null
-  utility2: Item | null
-  utility3: Item | null
-  utility4: Item | null
-  utility5: Item | null
-  utility6: Item | null
+  weapon1: {
+    primaryWeapon: { item: Item | null; rarity: string | null }
+    secondaryWeapon: { item: Item | null; rarity: string | null }
+  }
+  weapon2: {
+    primaryWeapon: { item: Item | null; rarity: string | null }
+    secondaryWeapon: { item: Item | null; rarity: string | null }
+  }
+  head: { item: Item | null; rarity: string | null }
+  necklace: { item: Item | null; rarity: string | null }
+  hands: { item: Item | null; rarity: string | null }
+  chest: { item: Item | null; rarity: string | null }
+  back: { item: Item | null; rarity: string | null }
+  ring1: { item: Item | null; rarity: string | null }
+  legs: { item: Item | null; rarity: string | null }
+  ring2: { item: Item | null; rarity: string | null }
+  feet: { item: Item | null; rarity: string | null }
+  utility1: { item: Item | null; rarity: string | null }
+  utility2: { item: Item | null; rarity: string | null }
+  utility3: { item: Item | null; rarity: string | null }
+  utility4: { item: Item | null; rarity: string | null }
+  utility5: { item: Item | null; rarity: string | null }
+  utility6: { item: Item | null; rarity: string | null }
 }
 
-type WeaponSlot = { primaryWeapon: Item | null; secondaryWeapon: Item | null }
+type WeaponSlot = {
+  primaryWeapon: { item: Item | null; rarity: string | null }
+  secondaryWeapon: { item: Item | null; rarity: string | null }
+}
 
 export type GearSlots = keyof GearState
 
 // Define the initial state
 const initialState: GearState = {
-  weapon1: { primaryWeapon: null, secondaryWeapon: null },
-  weapon2: { primaryWeapon: null, secondaryWeapon: null },
-  head: null,
-  necklace: null,
-  hands: null,
-  chest: null,
-  back: null,
-  ring1: null,
-  legs: null,
-  ring2: null,
-  feet: null,
-  utility1: null,
-  utility2: null,
-  utility3: null,
-  utility4: null,
-  utility5: null,
-  utility6: null,
+  weapon1: {
+    primaryWeapon: { item: null, rarity: null },
+    secondaryWeapon: { item: null, rarity: null },
+  },
+  weapon2: {
+    primaryWeapon: { item: null, rarity: null },
+    secondaryWeapon: { item: null, rarity: null },
+  },
+  head: { item: null, rarity: null },
+  necklace: { item: null, rarity: null },
+  hands: { item: null, rarity: null },
+  chest: { item: null, rarity: null },
+  back: { item: null, rarity: null },
+  ring1: { item: null, rarity: null },
+  legs: { item: null, rarity: null },
+  ring2: { item: null, rarity: null },
+  feet: { item: null, rarity: null },
+  utility1: { item: null, rarity: null },
+  utility2: { item: null, rarity: null },
+  utility3: { item: null, rarity: null },
+  utility4: { item: null, rarity: null },
+  utility5: { item: null, rarity: null },
+  utility6: { item: null, rarity: null },
 }
 
 const gearScoreTable: { [key: string]: { [rarity: string]: number } } = {
@@ -170,7 +185,10 @@ interface UpdateSlotAction {
   type: typeof UPDATE_SLOT
   payload: {
     slot: keyof GearState
-    data: Item | null
+    data: {
+      item: Item | null
+      rarity: string
+    }
   }
 }
 
@@ -210,33 +228,37 @@ const findFirstAvailableSlot = (state: GearState, item: Item): keyof GearState |
 
   if (item.slot === 'primaryWeapon' || item.slot === 'secondaryWeapon') {
     const checkTwoHandedConflict = (weaponSlot: WeaponSlot): boolean => {
-      if (weaponSlot.primaryWeapon && weaponSlot.primaryWeapon.handType === 'twoHanded') return true
-      if (weaponSlot.secondaryWeapon && weaponSlot.secondaryWeapon.handType === 'twoHanded')
+      if (weaponSlot.primaryWeapon.item && weaponSlot.primaryWeapon.item.handType === 'twoHanded')
+        return true
+      if (
+        weaponSlot.secondaryWeapon.item &&
+        weaponSlot.secondaryWeapon.item.handType === 'twoHanded'
+      )
         return true
       return false
     }
 
     if (state.weapon1 && !checkTwoHandedConflict(state.weapon1)) {
-      if (state.weapon1.primaryWeapon === null && item.slot === 'primaryWeapon') {
+      if (state.weapon1.primaryWeapon.item === null && item.slot === 'primaryWeapon') {
         return 'weapon1'
       }
       if (
-        state.weapon1.secondaryWeapon === null &&
+        state.weapon1.secondaryWeapon.item === null &&
         item.slot === 'secondaryWeapon' &&
-        state.weapon1.primaryWeapon?.handType !== 'twoHanded'
+        state.weapon1.primaryWeapon.item?.handType !== 'twoHanded'
       ) {
         return 'weapon1'
       }
     }
 
     if (state.weapon2 && !checkTwoHandedConflict(state.weapon2)) {
-      if (state.weapon2.primaryWeapon === null && item.slot === 'primaryWeapon') {
+      if (state.weapon2.primaryWeapon.item === null && item.slot === 'primaryWeapon') {
         return 'weapon2'
       }
       if (
-        state.weapon2.secondaryWeapon === null &&
+        state.weapon2.secondaryWeapon.item === null &&
         item.slot === 'secondaryWeapon' &&
-        state.weapon2.primaryWeapon?.handType !== 'twoHanded'
+        state.weapon2.primaryWeapon.item?.handType !== 'twoHanded'
       ) {
         return 'weapon2'
       }
@@ -250,20 +272,23 @@ const findFirstAvailableSlot = (state: GearState, item: Item): keyof GearState |
 const gearReducer = (state: GearState, action: GearAction): GearState => {
   switch (action.type) {
     case UPDATE_SLOT:
-      const slot = findFirstAvailableSlot(state, action.payload.data!)
+      const slot = findFirstAvailableSlot(state, action.payload.data.item!)
       if (slot) {
         if (slot === 'weapon1' || slot === 'weapon2') {
           const weaponSlot = { ...state[slot] } as WeaponSlot
-          if (action.payload.data?.slot === 'primaryWeapon') {
-            weaponSlot.primaryWeapon = action.payload.data
+          if (action.payload.data.item?.slot === 'primaryWeapon') {
+            weaponSlot.primaryWeapon.item = action.payload.data.item
             // If primary weapon is two-handed, clear secondary weapon slot
-            if (action.payload.data.handType === 'twoHanded') {
-              weaponSlot.secondaryWeapon = null
+            if (action.payload.data.item.handType === 'twoHanded') {
+              weaponSlot.secondaryWeapon = {
+                item: null,
+                rarity: null,
+              }
             }
-          } else if (action.payload.data?.slot === 'secondaryWeapon') {
+          } else if (action.payload.data.item?.slot === 'secondaryWeapon') {
             // Check if primary weapon is two-handed before allowing secondary weapon
-            if (weaponSlot.primaryWeapon?.handType !== 'twoHanded') {
-              weaponSlot.secondaryWeapon = action.payload.data
+            if (weaponSlot.primaryWeapon.item?.handType !== 'twoHanded') {
+              weaponSlot.secondaryWeapon.item = action.payload.data.item
             } else {
               return state // Do not update state if primary weapon is two-handed
             }
@@ -288,9 +313,15 @@ const gearReducer = (state: GearState, action: GearAction): GearState => {
     case DELETE_WEAPON:
       const weaponSlot = { ...state[action.payload.slot] } as WeaponSlot
       if (action.payload.weaponType === 'primaryWeapon') {
-        weaponSlot.primaryWeapon = null
+        weaponSlot.primaryWeapon = {
+          item: null,
+          rarity: null,
+        }
       } else if (action.payload.weaponType === 'secondaryWeapon') {
-        weaponSlot.secondaryWeapon = null
+        weaponSlot.secondaryWeapon = {
+          item: null,
+          rarity: null,
+        }
       }
       return {
         ...state,
@@ -304,7 +335,7 @@ const gearReducer = (state: GearState, action: GearAction): GearState => {
 // Define the context value shape
 interface GearContextValue {
   state: GearState
-  updateSlot: (item: Item) => void
+  updateSlot: (item: Item, rarity: string) => void
   deleteSlot: (slot: keyof GearState) => void
   deleteWeapon: (
     slot: 'weapon1' | 'weapon2',
@@ -325,10 +356,12 @@ export const GearProvider = ({ children }: GearProviderProps) => {
   const [state, dispatch] = useReducer(gearReducer, initialState)
 
   // Action creator for updating a slot
-  const updateSlot = (item: Item) => {
+  const updateSlot = (item: Item, rarity: string) => {
+    console.log('item: ', item)
+    console.log('rarity: ', rarity)
     dispatch({
       type: UPDATE_SLOT,
-      payload: { slot: item.slot as keyof GearState, data: item },
+      payload: { slot: item.slot as keyof GearState, data: { item, rarity } },
     })
   }
 
@@ -356,9 +389,9 @@ export const GearProvider = ({ children }: GearProviderProps) => {
     const getGearScore = (
       item: Item | null | undefined,
       slot: GearSlots | 'primaryWeapon' | 'secondaryWeapon', // extend GearSlots to make it easier to collect gearscore math
+      rarity: string | null,
     ): number => {
-      if (!item) return 0
-      const rarity = item.rarity[0]
+      if (!item || !rarity) return 0
       if (item.slot === 'primaryWeapon' || item.slot === 'secondaryWeapon') {
         const weaponType = item.handType === 'twoHanded' ? 'twoHanded' : item.slot
         return gearScoreTable[weaponType][rarity] || 0
@@ -369,10 +402,18 @@ export const GearProvider = ({ children }: GearProviderProps) => {
     let totalScore = 0
     for (const slot of Object.keys(state) as GearSlots[]) {
       if (slot === 'weapon1' || slot === 'weapon2') {
-        totalScore += getGearScore(state[slot]?.primaryWeapon, 'primaryWeapon')
-        totalScore += getGearScore(state[slot]?.secondaryWeapon, 'secondaryWeapon')
+        totalScore += getGearScore(
+          state[slot]?.primaryWeapon.item,
+          'primaryWeapon',
+          state[slot]?.primaryWeapon.rarity,
+        )
+        totalScore += getGearScore(
+          state[slot]?.secondaryWeapon.item,
+          'secondaryWeapon',
+          state[slot]?.primaryWeapon.rarity,
+        )
       } else {
-        totalScore += getGearScore(state[slot], slot)
+        totalScore += getGearScore(state[slot].item, slot, state[slot].rarity)
       }
     }
     return totalScore
