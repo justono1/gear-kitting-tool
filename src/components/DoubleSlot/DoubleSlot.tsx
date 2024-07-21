@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import classes from 'classnames'
 import css from './DoubleSlot.module.scss'
 import { GearSlots, useGear } from '@/providers/GearProvider'
+import { createAbbreviation } from '@/utils/createAbbreviation'
 
 interface DoubleSlotProps {
   leftItem?: Partial<Item> | null
@@ -47,7 +48,7 @@ export default function DoubleSlot({ leftItem, rightItem, slotSlug, className }:
           handleSlotRightCLick(event, 'primaryWeapon')
         }}
       >
-        {leftItem && leftItem.itemName && <h3>{leftItem.itemName}</h3>}
+        {leftItem && leftItem.itemName && <h3>{createAbbreviation(leftItem.itemName)}</h3>}
       </div>
 
       <div
@@ -57,7 +58,9 @@ export default function DoubleSlot({ leftItem, rightItem, slotSlug, className }:
         }}
       >
         <h3 className={classes([{ [css.sameItem]: isTwoHanded }])}>
-          {isTwoHanded ? leftItem?.itemName : rightItem?.itemName}
+          {isTwoHanded
+            ? createAbbreviation(leftItem?.itemName)
+            : createAbbreviation(rightItem?.itemName)}
         </h3>
       </div>
     </div>

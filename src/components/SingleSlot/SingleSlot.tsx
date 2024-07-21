@@ -7,6 +7,7 @@ import { SlotSize } from '@/utils/determineSlotSize'
 import { ExcludeFromUnion } from '@/utils/typeHelpers'
 import { useMemo } from 'react'
 import { GearSlots, useGear } from '@/providers/GearProvider'
+import { createAbbreviation } from '@/utils/createAbbreviation'
 
 interface SingleSlotProps {
   item: Partial<Item> | null
@@ -37,7 +38,7 @@ export default function SingleSlot({ item, slotSlug, slotSize, className }: Sing
         handleSlotRightCLick()
       }}
     >
-      {item?.itemName && <h3>{item.itemName}</h3>}
+      {item?.itemName && <h3>{createAbbreviation(item.itemName)}</h3>}
     </div>
   )
 }
