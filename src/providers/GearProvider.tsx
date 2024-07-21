@@ -24,6 +24,8 @@ interface GearState {
   utility6: Item | null
 }
 
+type WeaponSlot = { primaryWeapon: Item | null; secondaryWeapon: Item | null }
+
 export type GearSlots = keyof GearState
 
 // Define the initial state
@@ -77,15 +79,51 @@ const findFirstAvailableSlot = (state: GearState, item: Item): keyof GearState |
   }
 
   const slots = slotTypeMapping[item.slot]
-  if (!slots) return item.slot as keyof GearState
+  if (slots) {
+    for (const slot of slots) {
+      if (state[slot] === null) {
+        return slot
+      }
+    }
+    return null
+  }
 
-  for (const slot of slots) {
-    if (state[slot] === null) {
-      return slot
+  if (item.slot === 'primaryWeapon' || item.slot === 'secondaryWeapon') {
+    const checkTwoHandedConflict = (weaponSlot: WeaponSlot): boolean => {
+      if (weaponSlot.primaryWeapon && weaponSlot.primaryWeapon.handType === 'twoHanded') return true
+      if (weaponSlot.secondaryWeapon && weaponSlot.secondaryWeapon.handType === 'twoHanded')
+        return true
+      return false
+    }
+
+    if (state.weapon1 && !checkTwoHandedConflict(state.weapon1)) {
+      if (state.weapon1.primaryWeapon === null && item.slot === 'primaryWeapon') {
+        return 'weapon1'
+      }
+      if (
+        state.weapon1.secondaryWeapon === null &&
+        item.slot === 'secondaryWeapon' &&
+        state.weapon1.primaryWeapon?.handType !== 'twoHanded'
+      ) {
+        return 'weapon1'
+      }
+    }
+
+    if (state.weapon2 && !checkTwoHandedConflict(state.weapon2)) {
+      if (state.weapon2.primaryWeapon === null && item.slot === 'primaryWeapon') {
+        return 'weapon2'
+      }
+      if (
+        state.weapon2.secondaryWeapon === null &&
+        item.slot === 'secondaryWeapon' &&
+        state.weapon2.primaryWeapon?.handType !== 'twoHanded'
+      ) {
+        return 'weapon2'
+      }
     }
   }
 
-  return null
+  return item.slot as keyof GearState
 }
 
 // Create reducer
@@ -94,13 +132,41 @@ const gearReducer = (state: GearState, action: GearAction): GearState => {
     case UPDATE_SLOT:
       const slot = findFirstAvailableSlot(state, action.payload.data!)
       if (slot) {
-        return {
-          ...state,
-          [slot]: action.payload.data,
+        if (slot === 'weapon1' || slot === 'weapon2') {
+          const weaponSlot = { ...state[slot] } as WeaponSlot
+          if (action.payload.data?.slot === 'primaryWeapon') {
+            weaponSlot.primaryWeapon = action.payload.data
+            // If primary weapon is two-handed, clear secondary weapon slot
+            if (action.payload.data.handType === 'twoHanded') {
+              weaponSlot.secondaryWeapon = null
+            }
+          } else if (action.payload.data?.slot === 'secondaryWeapon') {
+            // Check if primary weapon is two-handed before allowing secondary weapon
+            if (weaponSlot.primaryWeapon?.handType !== 'twoHanded') {
+              weaponSlot.secondaryWeapon = action.payload.data
+            } else {
+              return state // Do not update state if primary weapon is two-handed
+            }
+          }
+          return {
+            ...state,
+            [slot]: weaponSlot,
+          }
+        } else {
+          return {
+            ...state,
+            [slot]: action.payload.data,
+          }
         }
       }
       return state
     case DELETE_SLOT:
+      if (action.payload.slot === 'weapon1' || action.payload.slot === 'weapon2') {
+        return {
+          ...state,
+          [action.payload.slot]: { primaryWeapon: null, secondaryWeapon: null },
+        }
+      }
       return {
         ...state,
         [action.payload.slot]: null,
