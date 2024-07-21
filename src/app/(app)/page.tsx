@@ -14,7 +14,7 @@ export default async function Page() {
 
   const itemData = itemDataResponse.docs
 
-  console.log(JSON.stringify(itemData))
+  // console.log(JSON.stringify(itemData))
 
   return (
     <>

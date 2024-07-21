@@ -13,8 +13,18 @@ export default function ClassLayout() {
     <section>
       <h2>Gear Score: 124</h2>
       <div className={css.classLayout}>
-        <DoubleSlot className={classes([css.classSlot, css.primaryWeapon])} />
-        <DoubleSlot className={classes([css.classSlot, css.secondaryWeapon])} />
+        <DoubleSlot
+          className={classes([css.classSlot, css.weapon1])}
+          slotSlug={'weapon1'}
+          leftItem={state.weapon1?.primaryWeapon}
+          rightItem={state.weapon1?.secondaryWeapon}
+        />
+        <DoubleSlot
+          className={classes([css.classSlot, css.weapon2])}
+          slotSlug={'weapon2'}
+          leftItem={state.weapon2?.primaryWeapon}
+          rightItem={state.weapon2?.secondaryWeapon}
+        />
 
         <SingleSlot
           slotSize={'medium'}
