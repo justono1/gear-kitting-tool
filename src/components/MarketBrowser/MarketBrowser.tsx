@@ -28,7 +28,7 @@ const toTitleCase = (stringToFormat: string) => {
 }
 
 const rarityOrder = ['Poor', 'Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Unique']
-type CharacterClass =
+export type CharacterClass =
   | 'barbarian'
   | 'bard'
   | 'cleric'

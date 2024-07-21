@@ -2,7 +2,7 @@
 
 .itemButton {
   position: relative;
-  padding: 5px 0px 5px 40px;
+  padding: 6px 0px 6px 40px;
   margin: 0;
   background: none;
   color: $color-gray-4;
@@ -16,6 +16,7 @@
   cursor: pointer;
   &:hover {
     background: $color-gray-2;
+    color: $color-gray-5;
     &:after {
       position: absolute;
       right: 20px;
