@@ -6,6 +6,7 @@ import { useMemo, useState } from 'react'
 import Collapsible from '../Collapsible/Collapsible'
 import ItemButton from '../ItemButton/ItemButton'
 import Filters from './Filters/Filters'
+import { useGear } from '@/providers/GearProvider'
 
 interface MarketItemList {
   [slot: string]: {
@@ -40,6 +41,7 @@ export type CharacterClass =
   | 'wizard'
 
 export default function MarketBrowser({ data }: MarketBrowserProps) {
+  const { updateSlot } = useGear()
   const [selectedCharacterClass, setSelectedCharacterClass] = useState<CharacterClass>('barbarian')
 
   const marketItemList = useMemo(() => {
@@ -125,7 +127,11 @@ export default function MarketBrowser({ data }: MarketBrowserProps) {
                   <Collapsible key={itemName} title={itemName} innerHeader={true}>
                     {rarityOrder.map(
                       (rarity) =>
-                        rarities[rarity] && <ItemButton key={rarity}>{rarity}</ItemButton>,
+                        rarities[rarity] && (
+                          <ItemButton key={rarity} onClick={() => updateSlot(rarities[rarity][0])}>
+                            {rarity}
+                          </ItemButton>
+                        ),
                     )}
                   </Collapsible>
                 ))}
