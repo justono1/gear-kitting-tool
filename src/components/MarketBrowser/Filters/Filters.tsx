@@ -2,7 +2,7 @@
 
 import InputRadio from '@/components/InputRadio/InputRadio'
 import css from './Filters.module.scss'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 
 const classList = [
   { value: 'barbarian', label: 'Barbarian' },
@@ -16,9 +16,15 @@ const classList = [
   { value: 'wizard', label: 'Wizard' },
 ]
 
-export default function Filters() {
-  const [selectedCharacterClass, setSelectedCharacterClass] = useState<string>('barbarian')
+interface FiltersProps {
+  selectedCharacterClass: string
+  setSelectedCharacterClass: Dispatch<SetStateAction<string>>
+}
 
+export default function Filters({
+  selectedCharacterClass,
+  setSelectedCharacterClass,
+}: FiltersProps) {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSelectedCharacterClass(event.target.value)
   }

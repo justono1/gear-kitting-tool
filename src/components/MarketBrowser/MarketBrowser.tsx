@@ -2,7 +2,7 @@
 
 import { Item } from 'payload-types'
 import css from './MarketBrowser.module.scss'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import Collapsible from '../Collapsible/Collapsible'
 import ItemButton from '../ItemButton/ItemButton'
 import Filters from './Filters/Filters'
@@ -28,10 +28,24 @@ const toTitleCase = (stringToFormat: string) => {
 }
 
 const rarityOrder = ['Poor', 'Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Unique']
+type CharacterClass =
+  | 'barbarian'
+  | 'bard'
+  | 'cleric'
+  | 'druid'
+  | 'fighter'
+  | 'ranger'
+  | 'rouge'
+  | 'warlock'
+  | 'wizard'
 
 export default function MarketBrowser({ data }: MarketBrowserProps) {
+  const [selectedCharacterClass, setSelectedCharacterClass] = useState<CharacterClass>('barbarian')
+
   const marketItemList = useMemo(() => {
-    const foundationData = data.reduce<MarketItemList>((acc, item) => {
+    const filteredData = data.filter((item) => item.class.includes(selectedCharacterClass))
+
+    const foundationData = filteredData.reduce<MarketItemList>((acc, item) => {
       const { slot, type, itemName, rarity } = item
       const primaryType = type && type.length > 0 ? toTitleCase(type[0]) : 'Unknown'
 
@@ -92,11 +106,14 @@ export default function MarketBrowser({ data }: MarketBrowserProps) {
       })
 
     return sortedMarketItemList
-  }, [data])
+  }, [data, selectedCharacterClass])
 
   return (
     <>
-      <Filters />
+      <Filters
+        selectedCharacterClass={selectedCharacterClass}
+        setSelectedCharacterClass={setSelectedCharacterClass}
+      />
 
       <div className={css.itemSectionContainer}>
         <h2>Items:</h2>
