@@ -11,7 +11,8 @@ export const findFirstAvailableSlot = (state: GearState, item: Item): keyof Gear
   const slots = slotTypeMapping[item.slot]
   if (slots) {
     for (const slot of slots) {
-      if (state[slot] === null) {
+      // @ts-ignore
+      if (state[slot].item === null) {
         return slot
       }
     }

@@ -14,8 +14,6 @@ export default async function Page() {
 
   const itemData = itemDataResponse.docs
 
-  console.log(JSON.stringify(itemData))
-
   return (
     <>
       <header className={css.header}>

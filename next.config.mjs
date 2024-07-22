@@ -4,8 +4,9 @@ import { withPayload } from '@payloadcms/next/withPayload'
 const nextConfig = {
   // Your Next.js config here
   experimental: {
-    reactCompiler: false
-  }
+    reactCompiler: false,
+  },
+  reactStrictMode: false,
 }
 
 export default withPayload(nextConfig)
