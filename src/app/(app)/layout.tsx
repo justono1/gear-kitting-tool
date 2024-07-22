@@ -1,7 +1,7 @@
 import React from 'react'
 import './globals.scss'
 import { Inter } from 'next/font/google'
-import { GearProvider } from '@/providers/GearProvider'
+import { GearProvider } from '@/providers/GearProvider/GearProvider'
 
 const inter = Inter({
   subsets: ['latin'],

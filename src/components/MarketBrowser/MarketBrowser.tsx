@@ -7,7 +7,7 @@ import { useMemo, useState } from 'react'
 import Collapsible from '../Collapsible/Collapsible'
 import ItemButton from '../ItemButton/ItemButton'
 import Filters from './Filters/Filters'
-import { useGear } from '@/providers/GearProvider'
+import { useGear } from '@/providers/GearProvider/GearProvider'
 
 interface MarketItemList {
   [slot: string]: {

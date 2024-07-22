@@ -2,7 +2,8 @@ import { Item } from 'payload-types'
 import { useMemo } from 'react'
 import classes from 'classnames'
 import css from './DoubleSlot.module.scss'
-import { GearSlots, useGear } from '@/providers/GearProvider'
+import { GearSlots } from '@/providers/GearProvider/types'
+import { useGear } from '@/providers/GearProvider/GearProvider'
 import { createAbbreviation } from '@/utils/createAbbreviation'
 
 interface DoubleSlotProps {

@@ -6,7 +6,8 @@ import css from './SingleSlot.module.scss'
 import { SlotSize } from '@/utils/determineSlotSize'
 import { ExcludeFromUnion } from '@/utils/typeHelpers'
 import { useMemo } from 'react'
-import { GearSlots, useGear } from '@/providers/GearProvider'
+import { GearSlots } from '@/providers/GearProvider/types'
+import { useGear } from '@/providers/GearProvider/GearProvider'
 import { createAbbreviation } from '@/utils/createAbbreviation'
 
 interface SingleSlotProps {

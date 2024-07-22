@@ -1,6 +1,6 @@
 'use client'
 
-import { useGear } from '@/providers/GearProvider'
+import { useGear } from '@/providers/GearProvider/GearProvider'
 import DoubleSlot from '../DoubleSlot/DoubleSlot'
 import SingleSlot from '../SingleSlot/SingleSlot'
 import css from './ClassLayout.module.scss'
