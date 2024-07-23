@@ -65,7 +65,13 @@ export default function SingleSlot({
 
   return (
     <div
-      className={classes([css.slot, { [css.slotted]: isSlotted }, css[slotSize], className])}
+      className={classes([
+        css.slot,
+        { [css.slotted]: isSlotted },
+        css[slotSize],
+        css[itemRarity ? itemRarity : 'poor'],
+        className,
+      ])}
       onContextMenu={(event) => {
         event.preventDefault()
         handleSlotRightCLick()
@@ -73,7 +79,7 @@ export default function SingleSlot({
       ref={refs.setReference}
       {...getReferenceProps()}
     >
-      {item?.itemName && <h3>{createAbbreviation(item.itemName)}</h3>}
+      {item?.itemName && <h3 className={css.slotItemName}>{createAbbreviation(item.itemName)}</h3>}
       {isOpen && item && itemRarity && (
         <div
           className={classes(css.slotPopup, css[itemRarity])}

@@ -106,7 +106,10 @@ export default function DoubleSlot({
   return (
     <div className={classes(css.slotOuter, className)}>
       <div
-        className={classes([css.slot, { [css.slotted]: isLeftSlotted }, css.slotInner])}
+        className={classes(
+          [css.slot, { [css.slotted]: isLeftSlotted }, css.slotInner],
+          css[leftItemRarity ? leftItemRarity : 'poor'],
+        )}
         onContextMenu={(event) => {
           handleSlotRightCLick(event, 'primaryWeapon')
         }}
@@ -114,7 +117,9 @@ export default function DoubleSlot({
         {...leftItemGetReferenceProps()}
       >
         <>
-          {leftItem && leftItem.itemName && <h3>{createAbbreviation(leftItem.itemName)}</h3>}
+          {leftItem && leftItem.itemName && (
+            <h3 className={css.slotItemName}>{createAbbreviation(leftItem.itemName)}</h3>
+          )}
           {leftItemIsOpen && leftItem && leftItemRarity && (
             <div
               className={classes(css.slotPopup, css[leftItemRarity])}
@@ -147,6 +152,7 @@ export default function DoubleSlot({
           { [css.slotted]: isRightItemSlotted },
           { [css.sameItemSlot]: isTwoHanded },
           css.slotInner,
+          css[rightItemRarity ? rightItemRarity : 'poor'],
         ])}
         onContextMenu={(event) => {
           handleSlotRightCLick(event, isTwoHanded ? 'primaryWeapon' : 'secondaryWeapon')
@@ -155,7 +161,7 @@ export default function DoubleSlot({
         {...rightItemGetReferenceProps()}
       >
         <>
-          <h3 className={classes([{ [css.sameItem]: isTwoHanded }])}>
+          <h3 className={classes([css.slotItemName, { [css.sameItem]: isTwoHanded }])}>
             {isTwoHanded
               ? createAbbreviation(leftItem?.itemName)
               : createAbbreviation(rightItem?.itemName)}

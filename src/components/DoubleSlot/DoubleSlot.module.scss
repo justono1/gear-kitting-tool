@@ -10,12 +10,19 @@
   justify-content: center;
   cursor: pointer;
   &:hover {
-    background: lighten($color-gray-2, 12%);
+    background: lighten($color-gray-2, 20%);
   }
 }
 
 .slotted {
-  background: $color-gray-3;
+  background: lighten($color-gray-2, 12%);
+  &:hover {
+    &.poor {
+      .slotItemName {
+        color: $color-gray-2;
+      }
+    }
+  }
 }
 
 .slotOuter {
