@@ -1,7 +1,14 @@
 @import '@/scss/variables.scss';
 
-.classSectionContainer {
+.filterItem {
+  margin-bottom: 35px;
+}
+
+.filters {
   margin-bottom: 40px;
+  .filterItem:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .classSelector {

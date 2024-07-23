@@ -3,7 +3,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import { Item } from 'payload-types'
 import css from './MarketBrowser.module.scss'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Collapsible from '../Collapsible/Collapsible'
 import ItemButton from '../ItemButton/ItemButton'
 import Filters from './Filters/Filters'
@@ -41,12 +41,22 @@ export type CharacterClass =
   | 'warlock'
   | 'wizard'
 
+export type CharacterPerks = 'weaponSpecialist' | null
+
 export default function MarketBrowser({ data }: MarketBrowserProps) {
   const { updateSlot } = useGear()
   const [selectedCharacterClass, setSelectedCharacterClass] = useState<CharacterClass>('fighter')
+  const [selectedCharacterPerks, setSelectedCharacterPerks] = useState<CharacterPerks>(null)
+
+  useEffect(() => {
+    console.log('selectedCharacterPerks: ', selectedCharacterPerks)
+  }, [selectedCharacterPerks])
 
   const marketItemList = useMemo(() => {
-    const filteredData = data.filter((item) => item.class.includes(selectedCharacterClass))
+    const filteredData =
+      selectedCharacterPerks !== 'weaponSpecialist'
+        ? data.filter((item) => item.class.includes(selectedCharacterClass))
+        : data
 
     const foundationData = filteredData.reduce<MarketItemList>((acc, item) => {
       const { slot, type, itemName, rarity } = item
@@ -109,13 +119,15 @@ export default function MarketBrowser({ data }: MarketBrowserProps) {
       })
 
     return sortedMarketItemList
-  }, [data, selectedCharacterClass])
+  }, [data, selectedCharacterClass, selectedCharacterPerks])
 
   return (
     <>
       <Filters
         selectedCharacterClass={selectedCharacterClass}
         setSelectedCharacterClass={setSelectedCharacterClass}
+        selectedCharacterPerks={selectedCharacterPerks}
+        setSelectedCharacterPerks={setSelectedCharacterPerks}
       />
 
       <div className={css.itemSectionContainer}>
