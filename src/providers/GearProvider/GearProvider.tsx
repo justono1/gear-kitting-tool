@@ -10,8 +10,7 @@ import React, {
   useCallback,
 } from 'react'
 import { GearState, GearSlots, WeaponSlot } from './types'
-import { gearScoreTable } from './data'
-import { findFirstAvailableSlot } from './utils'
+import { findFirstAvailableSlot, getGearScore } from './utils'
 
 // Define the initial state
 const initialState: GearState = {
@@ -192,17 +191,6 @@ export const GearProvider = ({ children }: GearProviderProps) => {
 
   // Method to calculate the current gear score
   const currentGearScore = useMemo(() => {
-    const getGearScore = (item: Item | null | undefined, rarity: string | null): number => {
-      if (!item || !rarity) return 0
-      const slot = item.slot
-
-      if (slot === 'primaryWeapon' || slot === 'secondaryWeapon') {
-        const weaponType = item.handType === 'twoHanded' ? 'twoHanded' : slot
-        return gearScoreTable[weaponType][rarity] || 0
-      }
-      return gearScoreTable[slot]?.[rarity] || 0
-    }
-
     let totalScore = 0
     for (const slot of Object.keys(state) as GearSlots[]) {
       if (slot === 'weapon1' || slot === 'weapon2') {

@@ -1,5 +1,6 @@
 import { Item } from 'payload-types'
 import { GearSlots, GearState, WeaponSlot } from './types'
+import { gearScoreTable } from './data'
 
 // Helper function to find the first available slot
 export const findFirstAvailableSlot = (state: GearState, item: Item): keyof GearState | null => {
@@ -61,4 +62,15 @@ export const findFirstAvailableSlot = (state: GearState, item: Item): keyof Gear
   }
 
   return item.slot as keyof GearState
+}
+
+export const getGearScore = (item: Item | null | undefined, rarity: string | null): number => {
+  if (!item || !rarity) return 0
+  const slot = item.slot
+
+  if (slot === 'primaryWeapon' || slot === 'secondaryWeapon') {
+    const weaponType = item.handType === 'twoHanded' ? 'twoHanded' : slot
+    return gearScoreTable[weaponType][rarity] || 0
+  }
+  return gearScoreTable[slot]?.[rarity] || 0
 }

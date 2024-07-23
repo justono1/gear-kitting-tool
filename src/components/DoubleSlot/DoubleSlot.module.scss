@@ -1,6 +1,8 @@
 @import '@/scss/variables.scss';
 
 .slot {
+  position: relative;
+  z-index: 1;
   background: $color-gray-2;
   border: 1px solid $color-gray-3;
   display: flex;
@@ -18,17 +20,111 @@
 
 .slotOuter {
   position: absolute;
+  z-index: 2;
   width: 170px;
   height: 200px;
   display: flex;
   justify-content: space-between;
+  &:hover {
+    z-index: 3;
+  }
 }
 
 .slotInner {
   width: 84px;
   height: 200px;
+  &:hover {
+    z-index: 2;
+  }
+}
+
+.sameItemSlot {
+  background: $color-gray-2;
+  pointer-events: none;
 }
 
 .sameItem {
   opacity: 0.3;
+}
+
+.slotPopup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  padding: 20px;
+  background: lighten($color-gray-2, 12%);
+  border: 1px solid $color-gray-3;
+  max-width: max-content;
+  min-width: 300px;
+  text-align: center;
+}
+
+.divider {
+  margin: 10px 0;
+  border-width: 2px;
+}
+
+.poor {
+  border-color: $color-poor;
+  h3,
+  .h3,
+  p,
+  strong {
+    color: $color-poor;
+  }
+}
+.common {
+  border-color: $color-common;
+  h3,
+  .h3,
+  p,
+  strong {
+    color: $color-common;
+  }
+}
+.uncommon {
+  border-color: $color-uncommon;
+  h3,
+  .h3,
+  p,
+  strong {
+    color: $color-uncommon;
+  }
+}
+.rare {
+  border-color: $color-rare;
+  h3,
+  .h3,
+  p,
+  strong {
+    color: $color-rare;
+  }
+}
+.epic {
+  border-color: $color-epic;
+  h3,
+  .h3,
+  p,
+  strong {
+    color: $color-epic;
+  }
+}
+.legendary {
+  border-color: $color-legendary;
+  h3,
+  .h3,
+  p,
+  strong {
+    color: $color-legendary;
+  }
+}
+.unique {
+  border-color: $color-unique;
+  h3,
+  .h3,
+  p,
+  strong {
+    color: $color-unique;
+  }
 }
