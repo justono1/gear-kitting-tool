@@ -10,7 +10,9 @@ import React, {
   useCallback,
 } from 'react'
 import { GearState, GearSlots, WeaponSlot, GearStore } from './types'
-import { findFirstAvailableSlot, getGearScore } from './utils'
+import { findFirstAvailableSlot, getGearScore, translateShortStateKey } from './utils'
+import { createAbbreviation } from '@/common/utils/createAbbreviation'
+import { splitAfterWord } from '@/common/utils/splitAfterWord'
 
 // Define the initial state
 const initialState: GearStore = {
@@ -53,7 +55,7 @@ interface UpdateSlotAction {
   payload: {
     slot: keyof GearState
     data: {
-      item: Item | null
+      item: Item
       rarity: string
     }
   }
@@ -62,7 +64,7 @@ interface UpdateSlotAction {
 interface DeleteSlotAction {
   type: typeof DELETE_SLOT
   payload: {
-    slot: keyof GearState
+    slot: GearSlots
   }
 }
 
@@ -103,11 +105,29 @@ const gearReducer = (state: GearStore, action: GearAction): GearStore => {
               return state // Do not update state if primary weapon is two-handed
             }
           }
+
           return {
             ...state,
             fullStore: {
               ...state.fullStore,
               [slot]: weaponSlot,
+            },
+            shortStore: {
+              ...state.shortStore,
+              ...(weaponSlot.primaryWeapon.item
+                ? {
+                    [`w${
+                      splitAfterWord(slot, 'weapon')[1]
+                    }pr`]: `${weaponSlot.primaryWeapon.item.id}:${weaponSlot.primaryWeapon.rarity}`,
+                  }
+                : {}),
+              ...(weaponSlot.secondaryWeapon.item
+                ? {
+                    [`w${
+                      splitAfterWord(slot, 'weapon')[1]
+                    }sc`]: `${weaponSlot.secondaryWeapon.item.id}:${weaponSlot.secondaryWeapon.rarity}`,
+                  }
+                : {}),
             },
           }
         } else {
@@ -117,34 +137,57 @@ const gearReducer = (state: GearStore, action: GearAction): GearStore => {
               ...state.fullStore,
               [slot]: action.payload.data,
             },
+            shortStore: {
+              ...state.shortStore,
+              [translateShortStateKey(
+                slot,
+              )]: `${action.payload.data.item.id}:${action.payload.data.rarity}`,
+            },
           }
         }
       }
       return state
     case DELETE_SLOT:
+      // @ts-ignore
+      const { [translateShortStateKey(action.payload.slot)]: removedSlot, ...remainingSlots } =
+        state.shortStore
+
       return {
         ...state,
         fullStore: {
           ...state.fullStore,
           [action.payload.slot]: null,
         },
+        shortStore: remainingSlots,
       }
     case DELETE_WEAPON:
       const weaponSlot = { ...state.fullStore[action.payload.slot] } as WeaponSlot
+      const shortStoreKeyBase = `w${splitAfterWord(action.payload.slot, 'weapon')[1]}`
+      let slotType: string
       if (action.payload.weaponType === 'primaryWeapon') {
         weaponSlot.primaryWeapon = {
           item: null,
           rarity: null,
         }
+        slotType = 'pr'
       } else if (action.payload.weaponType === 'secondaryWeapon') {
         weaponSlot.secondaryWeapon = {
           item: null,
           rarity: null,
         }
+        slotType = 'sc'
       }
+
+      // @ts-ignore
+      const { [`${shortStoreKeyBase + slotType}`]: removedWeapon, ...restSlots } = state.shortStore
+
       return {
         ...state,
-        [action.payload.slot]: weaponSlot,
+        fullStore: {
+          ...state.fullStore,
+          [action.payload.slot]: weaponSlot,
+        },
+        shortStore: restSlots,
       }
     default:
       return state

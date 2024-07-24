@@ -1,6 +1,6 @@
 import { Item } from 'payload-types'
 import { GearSlots, GearState, WeaponSlot } from './types'
-import { gearScoreTable } from './data'
+import { gearScoreTable, shortStateKeyMap } from './data'
 
 // Helper function to find the first available slot
 export const findFirstAvailableSlot = (state: GearState, item: Item): keyof GearState | null => {
@@ -73,4 +73,8 @@ export const getGearScore = (item: Item | null | undefined, rarity: string | nul
     return gearScoreTable[weaponType][rarity] || 0
   }
   return gearScoreTable[slot]?.[rarity] || 0
+}
+
+export const translateShortStateKey = (longKey: string): string => {
+  return shortStateKeyMap[longKey] || longKey
 }
