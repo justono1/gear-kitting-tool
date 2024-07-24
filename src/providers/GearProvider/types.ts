@@ -52,3 +52,8 @@ export interface GearStateForShare {
   u5?: string
   u6?: string
 }
+
+export interface GearStore {
+  fullStore: GearState
+  shortStore: GearStateForShare
+}
