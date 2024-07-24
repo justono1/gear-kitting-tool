@@ -15,9 +15,9 @@ import classes from 'classnames'
 import css from './DoubleSlot.module.scss'
 import { GearSlots } from '@/providers/GearProvider/types'
 import { useGear } from '@/providers/GearProvider/GearProvider'
-import { createAbbreviation } from '@/utils/createAbbreviation'
+import { createAbbreviation } from '@/common/utils/createAbbreviation'
 import { getGearScore } from '@/providers/GearProvider/utils'
-import { arrayCamelCaseToCommaSeparatedTitleCase } from '@/utils/slugToHuman'
+import { arrayCamelCaseToCommaSeparatedTitleCase } from '@/common/utils/slugToHuman'
 
 interface DoubleSlotProps {
   leftItem: Item | null

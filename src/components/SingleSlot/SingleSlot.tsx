@@ -12,14 +12,14 @@ import {
 import { Item } from 'payload-types'
 import classes from 'classnames'
 import css from './SingleSlot.module.scss'
-import { SlotSize } from '@/utils/determineSlotSize'
-import { ExcludeFromUnion } from '@/utils/typeHelpers'
+import { SlotSize } from '@/common/utils/determineSlotSize'
+import { ExcludeFromUnion } from '@/common/utils/typeHelpers'
 import { useMemo, useState } from 'react'
 import { GearSlots } from '@/providers/GearProvider/types'
 import { useGear } from '@/providers/GearProvider/GearProvider'
-import { createAbbreviation } from '@/utils/createAbbreviation'
+import { createAbbreviation } from '@/common/utils/createAbbreviation'
 import { getGearScore } from '@/providers/GearProvider/utils'
-import { arrayCamelCaseToCommaSeparatedTitleCase } from '@/utils/slugToHuman'
+import { arrayCamelCaseToCommaSeparatedTitleCase } from '@/common/utils/slugToHuman'
 
 interface SingleSlotProps {
   item: Item | null

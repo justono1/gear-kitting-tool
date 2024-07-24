@@ -1,7 +1,7 @@
 import css from './page.module.scss'
 import ClassLayout from '@/components/ClassLayout/ClassLayout'
 import React from 'react'
-import { getPayload } from '@/utils/payload'
+import { getPayload } from '@/common/utils/payload'
 import MarketBrowser from '@/components/MarketBrowser/MarketBrowser'
 
 export default async function Page() {
