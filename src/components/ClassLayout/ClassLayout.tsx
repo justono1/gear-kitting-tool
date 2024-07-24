@@ -5,7 +5,6 @@ import DoubleSlot from '../DoubleSlot/DoubleSlot'
 import SingleSlot from '../SingleSlot/SingleSlot'
 import css from './ClassLayout.module.scss'
 import classes from 'classnames'
-import { useEffect } from 'react'
 
 export default function ClassLayout() {
   const { state, currentGearScore } = useGear()

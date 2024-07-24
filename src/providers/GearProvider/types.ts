@@ -33,3 +33,22 @@ export type WeaponSlot = {
 }
 
 export type GearSlots = keyof GearState
+
+export interface GearStateForShare {
+  w1pr?: string // string values for all
+  w1sc?: string // item.id:rarity
+  w2pr?: string
+  w2sc?: string
+  h?: string
+  b?: string
+  r1?: string
+  l?: string
+  r2?: string
+  f?: string
+  u1?: string
+  u2?: string
+  u3?: string
+  u4?: string
+  u5?: string
+  u6?: string
+}
