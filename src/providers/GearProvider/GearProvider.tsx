@@ -235,37 +235,6 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
   const decodedGearData = gearRouteData ? base64ToObject(decodeURIComponent(gearRouteData)) : {}
   const previousDecodedGearData = usePrevious(decodedGearData)
 
-  // Gear Route Setter
-  useEffect(() => {
-    const encodedState = objectToBase64(state.shortStore)
-    const newSearchParams = new URLSearchParams(searchParams.toString())
-    newSearchParams.set('gear', encodedState)
-
-    router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false })
-  }, [state, searchParams])
-
-  // Gear Route Loader
-  useEffect(() => {
-    const shortStore = state.shortStore
-
-    const hasShortStore = Object.keys(shortStore).length > 0
-    const hasGearData = Object.keys(decodedGearData).length > 0
-    const isSameGearData =
-      JSON.stringify(decodedGearData) === JSON.stringify(previousDecodedGearData)
-
-    if (!hasShortStore && hasGearData && itemData && !isSameGearData) {
-      Object.keys(decodedGearData).forEach((key) => {
-        // each item in decodedGearData[key] is a string with itemID:rarity
-        const decodedValues = decodedGearData[key].split(':')
-        const foundItem = itemData.filter((item) => item.id === decodedValues[0])
-        if (foundItem.length === 1) {
-          //should only find one or none
-          updateSlot(foundItem[0], decodedValues[1])
-        }
-      })
-    }
-  }, [state, itemData, decodedGearData, previousDecodedGearData])
-
   // Action creator for updating a slot
   const updateSlot = useCallback((item: Item, rarity: string) => {
     dispatch({
@@ -292,6 +261,37 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
     },
     [],
   )
+
+  // Gear Route Setter
+  useEffect(() => {
+    const encodedState = objectToBase64(state.shortStore)
+    const newSearchParams = new URLSearchParams(searchParams.toString())
+    newSearchParams.set('gear', encodedState)
+
+    router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false })
+  }, [state, searchParams, pathname, router])
+
+  // Gear Route Loader
+  useEffect(() => {
+    const shortStore = state.shortStore
+
+    const hasShortStore = Object.keys(shortStore).length > 0
+    const hasGearData = Object.keys(decodedGearData).length > 0
+    const isSameGearData =
+      JSON.stringify(decodedGearData) === JSON.stringify(previousDecodedGearData)
+
+    if (!hasShortStore && hasGearData && itemData && !isSameGearData) {
+      Object.keys(decodedGearData).forEach((key) => {
+        // each item in decodedGearData[key] is a string with itemID:rarity
+        const decodedValues = decodedGearData[key].split(':')
+        const foundItem = itemData.filter((item) => item.id === decodedValues[0])
+        if (foundItem.length === 1) {
+          //should only find one or none
+          updateSlot(foundItem[0], decodedValues[1])
+        }
+      })
+    }
+  }, [state, itemData, decodedGearData, previousDecodedGearData, updateSlot])
 
   // Method to calculate the current gear score
   const currentGearScore = useMemo(() => {
