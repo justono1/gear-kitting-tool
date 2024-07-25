@@ -3,7 +3,7 @@ import ClassLayout from '@/components/ClassLayout/ClassLayout'
 import React from 'react'
 import { getPayload } from '@/common/utils/payload'
 import MarketBrowser from '@/components/MarketBrowser/MarketBrowser'
-
+import Header from '@/components/Header/Header'
 export default async function Page() {
   const payload = await getPayload()
 
@@ -16,19 +16,7 @@ export default async function Page() {
 
   return (
     <>
-      <header className={css.header}>
-        <h1>
-          Gear Kitting Tool <small>v0.1</small>
-        </h1>
-        <div className={css.shareBox}>
-          <input
-            className={css.inputText}
-            type="text"
-            value={'https://gearkittingtool.com/share/1231h-231h23jjjj'}
-          />
-          <button className={css.button}>Share Kit</button>
-        </div>
-      </header>
+      <Header />
       <section className={css.gridContainer}>
         <div className={css.itemColumn}>
           <MarketBrowser data={itemData} />

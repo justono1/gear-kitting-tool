@@ -8,11 +8,13 @@ import React, {
   ReactNode,
   useMemo,
   useCallback,
+  useEffect,
 } from 'react'
 import { GearState, GearSlots, WeaponSlot, GearStore } from './types'
 import { findFirstAvailableSlot, getGearScore, translateShortStateKey } from './utils'
-import { createAbbreviation } from '@/common/utils/createAbbreviation'
 import { splitAfterWord } from '@/common/utils/splitAfterWord'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { objectToBase64 } from '@/common/utils/objectToBase64'
 
 // Define the initial state
 const initialState: GearStore = {
@@ -216,6 +218,18 @@ interface GearProviderProps {
 
 export const GearProvider = ({ children }: GearProviderProps) => {
   const [state, dispatch] = useReducer(gearReducer, initialState)
+
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const encodedState = objectToBase64(state.shortStore)
+    const newSearchParams = new URLSearchParams(searchParams.toString())
+    newSearchParams.set('gear', encodedState)
+
+    router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false })
+  }, [state])
 
   // Action creator for updating a slot
   const updateSlot = useCallback((item: Item, rarity: string) => {
