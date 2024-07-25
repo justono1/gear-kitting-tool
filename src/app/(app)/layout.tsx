@@ -1,7 +1,6 @@
 import React from 'react'
 import './globals.scss'
 import { Inter } from 'next/font/google'
-import { GearProvider } from '@/providers/GearProvider/GearProvider'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -22,9 +21,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       </head>
 
       <body>
-        <main>
-          <GearProvider>{children}</GearProvider>
-        </main>
+        <main>{children}</main>
       </body>
     </html>
   )

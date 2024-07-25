@@ -5,15 +5,8 @@ import DoubleSlot from '../DoubleSlot/DoubleSlot'
 import SingleSlot from '../SingleSlot/SingleSlot'
 import css from './ClassLayout.module.scss'
 import classes from 'classnames'
-import { useEffect } from 'react'
-
 export default function ClassLayout() {
   const { state, currentGearScore } = useGear()
-
-  useEffect(() => {
-    console.log('state: ', state)
-    console.log('state JSON: ', JSON.stringify(state))
-  }, [state])
 
   return (
     <section>

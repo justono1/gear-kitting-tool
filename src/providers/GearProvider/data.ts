@@ -126,3 +126,7 @@ export const shortStateKeyMap: { [key: string]: string } = {
   utility5: 'u5',
   utility6: 'u6',
 }
+
+export const translateShortStateKey = (longKey: string): string => {
+  return shortStateKeyMap[longKey] || longKey
+}

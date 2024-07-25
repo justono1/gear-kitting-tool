@@ -78,3 +78,14 @@ export const getGearScore = (item: Item | null | undefined, rarity: string | nul
 export const translateShortStateKey = (longKey: string): string => {
   return shortStateKeyMap[longKey] || longKey
 }
+
+// Create a reverse mapping from short values to long keys
+const longStateKeyMap: { [key: string]: string } = {}
+Object.keys(shortStateKeyMap).forEach((key) => {
+  const value = shortStateKeyMap[key]
+  longStateKeyMap[value] = key
+})
+
+export const translateShortToLongStateKey = (shortKey: string): string => {
+  return longStateKeyMap[shortKey] || shortKey
+}
