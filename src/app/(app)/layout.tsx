@@ -1,6 +1,7 @@
 import React from 'react'
 import './globals.scss'
 import { Inter } from 'next/font/google'
+import GoogleAnalytics from '@/components/GoogleAnalytics/GoogleAnalytics'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -23,6 +24,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <body>
         <main>{children}</main>
       </body>
+      <GoogleAnalytics />
     </html>
   )
 }
