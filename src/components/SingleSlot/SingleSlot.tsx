@@ -14,7 +14,7 @@ import classes from 'classnames'
 import css from './SingleSlot.module.scss'
 import { SlotSize } from '@/common/utils/determineSlotSize'
 import { ExcludeFromUnion } from '@/common/utils/typeHelpers'
-import { useMemo, useState } from 'react'
+import { MouseEventHandler, useMemo, useState } from 'react'
 import { GearSlots } from '@/providers/GearProvider/types'
 import { useGear } from '@/providers/GearProvider/GearProvider'
 import { createAbbreviation } from '@/common/utils/createAbbreviation'
@@ -27,6 +27,7 @@ interface SingleSlotProps {
   slotSize: ExcludeFromUnion<SlotSize, 'largeTwo'>
   itemRarity: string | null
   className?: string
+  onLeftClick?: MouseEventHandler<HTMLDivElement>
 }
 
 export default function SingleSlot({
@@ -35,6 +36,7 @@ export default function SingleSlot({
   slotSize,
   itemRarity,
   className,
+  onLeftClick,
 }: SingleSlotProps) {
   const [isOpen, setIsOpen] = useState(false)
   const { deleteSlot } = useGear()
@@ -76,6 +78,7 @@ export default function SingleSlot({
         event.preventDefault()
         handleSlotRightCLick()
       }}
+      onClick={onLeftClick}
       ref={refs.setReference}
       {...getReferenceProps()}
     >

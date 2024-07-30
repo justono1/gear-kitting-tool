@@ -9,8 +9,9 @@ import React, {
   useMemo,
   useCallback,
   useEffect,
+  useState,
 } from 'react'
-import { GearState, GearSlots, WeaponSlot, GearStore } from './types'
+import { GearState, GearSlots, WeaponSlot, GearStore, MarketBrowserTabsIsOpen } from './types'
 import {
   findFirstAvailableSlot,
   getGearScore,
@@ -213,6 +214,8 @@ interface GearContextValue {
     weaponType: 'primaryWeapon' | 'secondaryWeapon',
   ) => void
   currentGearScore: number
+  marketBrowserTabsIsOpen: MarketBrowserTabsIsOpen
+  setMarketBrowserTabsIsOpen: React.Dispatch<React.SetStateAction<MarketBrowserTabsIsOpen>>
 }
 
 // Create context
@@ -226,6 +229,19 @@ interface GearProviderProps {
 
 export const GearProvider = ({ children, itemData }: GearProviderProps) => {
   const [state, dispatch] = useReducer(gearReducer, initialState)
+  const [marketBrowserTabsIsOpen, setMarketBrowserTabsIsOpen] = useState<MarketBrowserTabsIsOpen>({
+    primaryWeapon: false,
+    secondaryWeapon: false,
+    head: false,
+    necklace: false,
+    hands: false,
+    chest: false,
+    back: false,
+    ring: false,
+    legs: false,
+    feet: false,
+    utility: false,
+  })
 
   const router = useRouter()
   const pathname = usePathname()
@@ -320,8 +336,18 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
       deleteSlot,
       deleteWeapon,
       currentGearScore,
+      marketBrowserTabsIsOpen,
+      setMarketBrowserTabsIsOpen,
     }),
-    [state, updateSlot, deleteSlot, deleteWeapon, currentGearScore],
+    [
+      state,
+      updateSlot,
+      deleteSlot,
+      deleteWeapon,
+      currentGearScore,
+      marketBrowserTabsIsOpen,
+      setMarketBrowserTabsIsOpen,
+    ],
   )
 
   return <GearContext.Provider value={contextValue}>{children}</GearContext.Provider>

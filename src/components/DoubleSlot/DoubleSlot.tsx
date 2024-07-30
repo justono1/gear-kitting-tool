@@ -10,7 +10,7 @@ import {
   autoUpdate,
 } from '@floating-ui/react'
 import { Item } from 'payload-types'
-import { useMemo, useState } from 'react'
+import { MouseEventHandler, useMemo, useState } from 'react'
 import classes from 'classnames'
 import css from './DoubleSlot.module.scss'
 import { useGear } from '@/providers/GearProvider/GearProvider'
@@ -25,6 +25,7 @@ interface DoubleSlotProps {
   rightItemRarity: string | null
   slotSlug: 'weapon1' | 'weapon2'
   className?: string
+  onLeftClick?: MouseEventHandler<HTMLDivElement>
 }
 
 export default function DoubleSlot({
@@ -34,6 +35,7 @@ export default function DoubleSlot({
   rightItemRarity,
   slotSlug,
   className,
+  onLeftClick,
 }: DoubleSlotProps) {
   const { deleteWeapon } = useGear()
   const [leftItemIsOpen, setLeftItemIsOpen] = useState(false)
@@ -103,7 +105,7 @@ export default function DoubleSlot({
   }
 
   return (
-    <div className={classes(css.slotOuter, className)}>
+    <div className={classes(css.slotOuter, className)} onClick={onLeftClick}>
       <div
         className={classes(
           [css.slot, { [css.slotted]: isLeftSlotted }, css.slotInner],

@@ -9,6 +9,7 @@ import ItemButton from '../ItemButton/ItemButton'
 import Filters from './Filters/Filters'
 import { useGear } from '@/providers/GearProvider/GearProvider'
 import { getGearScore } from '@/providers/GearProvider/utils'
+import { titleCaseToCamelCase } from '@/common/utils/humanToSlug'
 
 interface MarketItemList {
   [slot: string]: {
@@ -75,13 +76,9 @@ const customSortFunction = (a: string, b: string) => {
 }
 
 export default function MarketBrowser({ data }: MarketBrowserProps) {
-  const { updateSlot } = useGear()
+  const { updateSlot, marketBrowserTabsIsOpen } = useGear()
   const [selectedCharacterClass, setSelectedCharacterClass] = useState<CharacterClass>('fighter')
   const [selectedCharacterPerks, setSelectedCharacterPerks] = useState<CharacterPerks>(null)
-
-  useEffect(() => {
-    console.log('selectedCharacterPerks: ', selectedCharacterPerks)
-  }, [selectedCharacterPerks])
 
   const marketItemList = useMemo(() => {
     const filteredData =
@@ -163,37 +160,42 @@ export default function MarketBrowser({ data }: MarketBrowserProps) {
 
       <div className={css.itemSectionContainer}>
         <h2>Items:</h2>
-        {Object.entries(marketItemList).map(([slot, primaryTypes]) => (
-          <Collapsible key={slot} title={slot}>
-            {Object.entries(primaryTypes).map(([primaryType, itemNames]) => (
-              <Collapsible key={primaryType} title={primaryType} innerHeader={true}>
-                {Object.entries(itemNames).map(([itemName, rarities]) => (
-                  <Collapsible key={itemName} title={itemName} innerHeader={true}>
-                    {rarityOrder.map((rarity) => {
-                      return (
-                        rarities[rarity] && (
-                          <ItemButton
-                            key={`${uuidv4()}-${rarity}`}
-                            onClick={() => updateSlot(rarities[rarity][0], rarity.toLowerCase())}
-                          >
-                            <div className={css.itemRow}>
-                              <div>{rarity}</div>
-                              <div>-</div>
-                              <div className={css.gearScore}>
-                                Gear Score:{' '}
-                                {getGearScore(rarities[rarity][0], rarity.toLowerCase())}
+        {Object.entries(marketItemList).map(([slot, primaryTypes]) => {
+          const slotSlug = titleCaseToCamelCase(slot)
+
+          return (
+            // @ts-ignore
+            <Collapsible key={slot} title={slot} isOpen={marketBrowserTabsIsOpen[slotSlug]}>
+              {Object.entries(primaryTypes).map(([primaryType, itemNames]) => (
+                <Collapsible key={primaryType} title={primaryType} innerHeader={true}>
+                  {Object.entries(itemNames).map(([itemName, rarities]) => (
+                    <Collapsible key={itemName} title={itemName} innerHeader={true}>
+                      {rarityOrder.map((rarity) => {
+                        return (
+                          rarities[rarity] && (
+                            <ItemButton
+                              key={`${uuidv4()}-${rarity}`}
+                              onClick={() => updateSlot(rarities[rarity][0], rarity.toLowerCase())}
+                            >
+                              <div className={css.itemRow}>
+                                <div>{rarity}</div>
+                                <div>-</div>
+                                <div className={css.gearScore}>
+                                  Gear Score:{' '}
+                                  {getGearScore(rarities[rarity][0], rarity.toLowerCase())}
+                                </div>
                               </div>
-                            </div>
-                          </ItemButton>
+                            </ItemButton>
+                          )
                         )
-                      )
-                    })}
-                  </Collapsible>
-                ))}
-              </Collapsible>
-            ))}
-          </Collapsible>
-        ))}
+                      })}
+                    </Collapsible>
+                  ))}
+                </Collapsible>
+              ))}
+            </Collapsible>
+          )
+        })}
       </div>
     </>
   )

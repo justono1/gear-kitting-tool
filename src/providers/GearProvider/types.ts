@@ -53,6 +53,20 @@ export interface GearStateForShare {
   u6?: string
 }
 
+export interface MarketBrowserTabsIsOpen {
+  primaryWeapon: boolean
+  secondaryWeapon: boolean
+  head: boolean
+  necklace: boolean
+  hands: boolean
+  chest: boolean
+  back: boolean
+  ring: boolean
+  legs: boolean
+  feet: boolean
+  utility: boolean
+}
+
 export interface GearStore {
   fullStore: GearState
   shortStore: GearStateForShare

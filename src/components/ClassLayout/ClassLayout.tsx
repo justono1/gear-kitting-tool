@@ -6,7 +6,16 @@ import SingleSlot from '../SingleSlot/SingleSlot'
 import css from './ClassLayout.module.scss'
 import classes from 'classnames'
 export default function ClassLayout() {
-  const { state, currentGearScore } = useGear()
+  const { state, currentGearScore, setMarketBrowserTabsIsOpen, marketBrowserTabsIsOpen } = useGear()
+
+  const handleSlotClick = (slot: string) => {
+    if (slot) {
+      setMarketBrowserTabsIsOpen({
+        ...marketBrowserTabsIsOpen,
+        [slot]: true,
+      })
+    }
+  }
 
   return (
     <section>
@@ -19,6 +28,7 @@ export default function ClassLayout() {
           leftItemRarity={state.fullStore.weapon1?.primaryWeapon?.rarity}
           rightItem={state.fullStore.weapon1?.secondaryWeapon?.item}
           rightItemRarity={state.fullStore.weapon1?.secondaryWeapon?.rarity}
+          onLeftClick={() => handleSlotClick('primaryWeapon')}
         />
         <DoubleSlot
           className={classes([css.classSlot, css.weapon2])}
@@ -27,6 +37,7 @@ export default function ClassLayout() {
           leftItemRarity={state.fullStore.weapon2?.primaryWeapon?.rarity}
           rightItem={state.fullStore.weapon2?.secondaryWeapon?.item}
           rightItemRarity={state.fullStore.weapon2?.secondaryWeapon?.rarity}
+          onLeftClick={() => handleSlotClick('primaryWeapon')}
         />
 
         <SingleSlot
@@ -35,6 +46,7 @@ export default function ClassLayout() {
           slotSlug={'head'}
           item={state.fullStore.head?.item}
           itemRarity={state.fullStore.head?.rarity}
+          onLeftClick={() => handleSlotClick('head')}
         />
         <SingleSlot
           slotSize={'tiny'}
@@ -42,6 +54,7 @@ export default function ClassLayout() {
           slotSlug={'necklace'}
           item={state.fullStore.necklace?.item}
           itemRarity={state.fullStore.necklace?.rarity}
+          onLeftClick={() => handleSlotClick('necklace')}
         />
         <SingleSlot
           slotSize={'medium'}
@@ -49,6 +62,7 @@ export default function ClassLayout() {
           slotSlug={'hands'}
           item={state.fullStore.hands?.item}
           itemRarity={state.fullStore.hands?.rarity}
+          onLeftClick={() => handleSlotClick('hands')}
         />
         <SingleSlot
           slotSize={'large'}
@@ -56,6 +70,7 @@ export default function ClassLayout() {
           slotSlug={'chest'}
           item={state.fullStore.chest?.item}
           itemRarity={state.fullStore.chest?.rarity}
+          onLeftClick={() => handleSlotClick('chest')}
         />
         <SingleSlot
           slotSize={'medium'}
@@ -63,6 +78,7 @@ export default function ClassLayout() {
           slotSlug={'back'}
           item={state.fullStore.back?.item}
           itemRarity={state.fullStore.back?.rarity}
+          onLeftClick={() => handleSlotClick('back')}
         />
         <SingleSlot
           slotSize={'tiny'}
@@ -70,6 +86,7 @@ export default function ClassLayout() {
           slotSlug={'ring1'}
           item={state.fullStore.ring1?.item}
           itemRarity={state.fullStore.ring1?.rarity}
+          onLeftClick={() => handleSlotClick('ring')}
         />
         <SingleSlot
           slotSize={'large'}
@@ -77,6 +94,7 @@ export default function ClassLayout() {
           slotSlug={'legs'}
           item={state.fullStore.legs?.item}
           itemRarity={state.fullStore.legs?.rarity}
+          onLeftClick={() => handleSlotClick('ring')}
         />
         <SingleSlot
           slotSize={'tiny'}
@@ -84,6 +102,7 @@ export default function ClassLayout() {
           slotSlug={'ring2'}
           item={state.fullStore.ring2?.item}
           itemRarity={state.fullStore.ring2?.rarity}
+          onLeftClick={() => handleSlotClick('ring')}
         />
         <SingleSlot
           slotSize={'medium'}
@@ -91,6 +110,7 @@ export default function ClassLayout() {
           slotSlug={'feet'}
           item={state.fullStore.feet?.item}
           itemRarity={state.fullStore.feet?.rarity}
+          onLeftClick={() => handleSlotClick('feet')}
         />
 
         <SingleSlot
@@ -99,6 +119,7 @@ export default function ClassLayout() {
           slotSlug={'utility1'}
           item={state.fullStore.utility1?.item}
           itemRarity={state.fullStore.utility1?.rarity}
+          onLeftClick={() => handleSlotClick('utility')}
         />
         <SingleSlot
           slotSize={'small'}
@@ -106,6 +127,7 @@ export default function ClassLayout() {
           slotSlug={'utility2'}
           item={state.fullStore.utility2?.item}
           itemRarity={state.fullStore.utility2?.rarity}
+          onLeftClick={() => handleSlotClick('utility')}
         />
         <SingleSlot
           slotSize={'small'}
@@ -113,6 +135,7 @@ export default function ClassLayout() {
           slotSlug={'utility3'}
           item={state.fullStore.utility3?.item}
           itemRarity={state.fullStore.utility3?.rarity}
+          onLeftClick={() => handleSlotClick('utility')}
         />
         <SingleSlot
           slotSize={'small'}
@@ -120,6 +143,7 @@ export default function ClassLayout() {
           slotSlug={'utility4'}
           item={state.fullStore.utility4?.item}
           itemRarity={state.fullStore.utility4?.rarity}
+          onLeftClick={() => handleSlotClick('utility')}
         />
         <SingleSlot
           slotSize={'small'}
@@ -127,6 +151,7 @@ export default function ClassLayout() {
           slotSlug={'utility5'}
           item={state.fullStore.utility5?.item}
           itemRarity={state.fullStore.utility5?.rarity}
+          onLeftClick={() => handleSlotClick('utility')}
         />
         <SingleSlot
           slotSize={'small'}
@@ -134,6 +159,7 @@ export default function ClassLayout() {
           slotSlug={'utility6'}
           item={state.fullStore.utility6?.item}
           itemRarity={state.fullStore.utility6?.rarity}
+          onLeftClick={() => handleSlotClick('utility')}
         />
       </div>
     </section>
