@@ -94,7 +94,7 @@ export default function ClassLayout() {
           slotSlug={'legs'}
           item={state.fullStore.legs?.item}
           itemRarity={state.fullStore.legs?.rarity}
-          onLeftClick={() => handleSlotClick('ring')}
+          onLeftClick={() => handleSlotClick('legs')}
         />
         <SingleSlot
           slotSize={'tiny'}
