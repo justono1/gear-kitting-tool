@@ -10,6 +10,8 @@ import React, {
   useCallback,
   useEffect,
   useState,
+  RefObject,
+  useRef,
 } from 'react'
 import { GearState, GearSlots, WeaponSlot, GearStore, MarketBrowserTabsIsOpen } from './types'
 import {
@@ -216,6 +218,8 @@ interface GearContextValue {
   currentGearScore: number
   marketBrowserTabsIsOpen: MarketBrowserTabsIsOpen
   setMarketBrowserTabsIsOpen: React.Dispatch<React.SetStateAction<MarketBrowserTabsIsOpen>>
+  scrollToRef: (key: string) => void
+  registerRef: (key: string, ref: RefObject<HTMLDivElement>) => void
 }
 
 // Create context
@@ -242,6 +246,8 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
     feet: false,
     utility: false,
   })
+
+  const refs = useRef<{ [key: string]: RefObject<HTMLDivElement> }>({})
 
   const router = useRouter()
   const pathname = usePathname()
@@ -277,6 +283,16 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
     },
     [],
   )
+
+  const scrollToRef = (key: string) => {
+    if (refs.current[key]?.current) {
+      refs.current[key].current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
+  const registerRef = (key: string, ref: RefObject<HTMLDivElement>) => {
+    refs.current[key] = ref
+  }
 
   // Gear Route Setter
   useEffect(() => {
@@ -338,6 +354,8 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
       currentGearScore,
       marketBrowserTabsIsOpen,
       setMarketBrowserTabsIsOpen,
+      scrollToRef,
+      registerRef,
     }),
     [
       state,
@@ -347,6 +365,8 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
       currentGearScore,
       marketBrowserTabsIsOpen,
       setMarketBrowserTabsIsOpen,
+      scrollToRef,
+      registerRef,
     ],
   )
 

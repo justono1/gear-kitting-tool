@@ -6,7 +6,13 @@ import SingleSlot from '../SingleSlot/SingleSlot'
 import css from './ClassLayout.module.scss'
 import classes from 'classnames'
 export default function ClassLayout() {
-  const { state, currentGearScore, setMarketBrowserTabsIsOpen, marketBrowserTabsIsOpen } = useGear()
+  const {
+    state,
+    currentGearScore,
+    setMarketBrowserTabsIsOpen,
+    marketBrowserTabsIsOpen,
+    scrollToRef,
+  } = useGear()
 
   const handleSlotClick = (slot: string) => {
     if (slot) {
@@ -14,6 +20,7 @@ export default function ClassLayout() {
         ...marketBrowserTabsIsOpen,
         [slot]: true,
       })
+      scrollToRef(slot)
     }
   }
 
