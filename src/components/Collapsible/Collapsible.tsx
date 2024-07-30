@@ -52,4 +52,6 @@ const Collapsible = forwardRef<HTMLDivElement, CollapsibleProps>(
   },
 )
 
+Collapsible.displayName = 'Collapsible'
+
 export default Collapsible

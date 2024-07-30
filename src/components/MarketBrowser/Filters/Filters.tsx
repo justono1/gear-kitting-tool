@@ -3,7 +3,7 @@
 import InputRadio from '@/components/InputRadio/InputRadio'
 import css from './Filters.module.scss'
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
-import { CharacterClass, CharacterPerks } from '../MarketBrowser'
+import { CharacterClass, CharacterPerks } from '@/providers/GearProvider/types'
 import InputCheckbox from '@/components/InputCheckbox/InputCheckbox'
 
 const classList = [
