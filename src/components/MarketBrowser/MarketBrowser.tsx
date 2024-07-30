@@ -46,19 +46,6 @@ const customSlotOrder = [
   'Utility',
 ]
 
-export type CharacterClass =
-  | 'barbarian'
-  | 'bard'
-  | 'cleric'
-  | 'druid'
-  | 'fighter'
-  | 'ranger'
-  | 'rouge'
-  | 'warlock'
-  | 'wizard'
-
-export type CharacterPerks = 'weaponSpecialist' | null
-
 // Custom sort function for slots
 const customSortFunction = (a: string, b: string) => {
   const indexA = customSlotOrder.indexOf(a)
@@ -76,9 +63,16 @@ const customSortFunction = (a: string, b: string) => {
 }
 
 export default function MarketBrowser({ data }: MarketBrowserProps) {
-  const { updateSlot, marketBrowserTabsIsOpen, setMarketBrowserTabsIsOpen, registerRef } = useGear()
-  const [selectedCharacterClass, setSelectedCharacterClass] = useState<CharacterClass>('fighter')
-  const [selectedCharacterPerks, setSelectedCharacterPerks] = useState<CharacterPerks>(null)
+  const {
+    updateSlot,
+    marketBrowserTabsIsOpen,
+    setMarketBrowserTabsIsOpen,
+    registerRef,
+    selectedCharacterPerks,
+    selectedCharacterClass,
+    setSelectedCharacterPerks,
+    setSelectedCharacterClass,
+  } = useGear()
 
   const handleOnCollapseClose = (slot: string) => {
     setMarketBrowserTabsIsOpen({

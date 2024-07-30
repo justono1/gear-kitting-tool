@@ -13,7 +13,15 @@ import React, {
   RefObject,
   useRef,
 } from 'react'
-import { GearState, GearSlots, WeaponSlot, GearStore, MarketBrowserTabsIsOpen } from './types'
+import {
+  GearState,
+  GearSlots,
+  WeaponSlot,
+  GearStore,
+  MarketBrowserTabsIsOpen,
+  CharacterClass,
+  CharacterPerks,
+} from './types'
 import {
   findFirstAvailableSlot,
   getGearScore,
@@ -220,6 +228,10 @@ interface GearContextValue {
   setMarketBrowserTabsIsOpen: React.Dispatch<React.SetStateAction<MarketBrowserTabsIsOpen>>
   scrollToRef: (key: string) => void
   registerRef: (key: string, ref: RefObject<HTMLDivElement>) => void
+  selectedCharacterClass: CharacterClass
+  setSelectedCharacterClass: React.Dispatch<React.SetStateAction<CharacterClass>>
+  selectedCharacterPerks: CharacterPerks
+  setSelectedCharacterPerks: React.Dispatch<React.SetStateAction<CharacterPerks>>
 }
 
 // Create context
@@ -233,6 +245,19 @@ interface GearProviderProps {
 
 export const GearProvider = ({ children, itemData }: GearProviderProps) => {
   const [state, dispatch] = useReducer(gearReducer, initialState)
+
+  const refs = useRef<{ [key: string]: RefObject<HTMLDivElement> }>({})
+
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const characterClassRouteData = searchParams.get('class')
+
+  const [selectedCharacterClass, setSelectedCharacterClass] = useState<CharacterClass>(
+    characterClassRouteData ? (characterClassRouteData as CharacterClass) : 'fighter',
+  )
+  const [selectedCharacterPerks, setSelectedCharacterPerks] = useState<CharacterPerks>(null)
   const [marketBrowserTabsIsOpen, setMarketBrowserTabsIsOpen] = useState<MarketBrowserTabsIsOpen>({
     primaryWeapon: false,
     secondaryWeapon: false,
@@ -247,12 +272,7 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
     utility: false,
   })
 
-  const refs = useRef<{ [key: string]: RefObject<HTMLDivElement> }>({})
-
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-
+  const previousCharacterClassRouteData = usePrevious(characterClassRouteData)
   const gearRouteData = searchParams.get('gear')
   const decodedGearData = gearRouteData ? base64ToObject(decodeURIComponent(gearRouteData)) : {}
   const previousDecodedGearData = usePrevious(decodedGearData)
@@ -299,9 +319,10 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
     const encodedState = objectToBase64(state.shortStore)
     const newSearchParams = new URLSearchParams(searchParams.toString())
     newSearchParams.set('gear', encodedState)
+    newSearchParams.set('class', selectedCharacterClass)
 
     router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false })
-  }, [state, searchParams, pathname, router])
+  }, [state, searchParams, pathname, router, selectedCharacterClass])
 
   // Gear Route Loader
   useEffect(() => {
@@ -323,7 +344,20 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
         }
       })
     }
-  }, [state, itemData, decodedGearData, previousDecodedGearData, updateSlot])
+
+    if (characterClassRouteData && characterClassRouteData !== previousCharacterClassRouteData) {
+      setSelectedCharacterClass(characterClassRouteData as CharacterClass)
+    }
+  }, [
+    state,
+    itemData,
+    decodedGearData,
+    previousDecodedGearData,
+    updateSlot,
+    characterClassRouteData,
+    previousCharacterClassRouteData,
+    setSelectedCharacterClass,
+  ])
 
   // Method to calculate the current gear score
   const currentGearScore = useMemo(() => {
@@ -356,6 +390,10 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
       setMarketBrowserTabsIsOpen,
       scrollToRef,
       registerRef,
+      selectedCharacterClass,
+      setSelectedCharacterClass,
+      selectedCharacterPerks,
+      setSelectedCharacterPerks,
     }),
     [
       state,
@@ -367,6 +405,10 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
       setMarketBrowserTabsIsOpen,
       scrollToRef,
       registerRef,
+      selectedCharacterClass,
+      setSelectedCharacterClass,
+      selectedCharacterPerks,
+      setSelectedCharacterPerks,
     ],
   )
 

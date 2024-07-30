@@ -71,3 +71,16 @@ export interface GearStore {
   fullStore: GearState
   shortStore: GearStateForShare
 }
+
+export type CharacterClass =
+  | 'barbarian'
+  | 'bard'
+  | 'cleric'
+  | 'druid'
+  | 'fighter'
+  | 'ranger'
+  | 'rouge'
+  | 'warlock'
+  | 'wizard'
+
+export type CharacterPerks = 'weaponSpecialist' | null
