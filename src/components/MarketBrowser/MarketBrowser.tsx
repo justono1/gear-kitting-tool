@@ -31,6 +31,20 @@ const toTitleCase = (stringToFormat: string) => {
 }
 
 const rarityOrder = ['Poor', 'Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Unique']
+const customSlotOrder = [
+  'Primary Weapon',
+  'Secondary Weapon',
+  'Head',
+  'Necklace',
+  'Hands',
+  'Chest',
+  'Back',
+  'Ring',
+  'Legs',
+  'Feet',
+  'Utility',
+]
+
 export type CharacterClass =
   | 'barbarian'
   | 'bard'
@@ -43,6 +57,22 @@ export type CharacterClass =
   | 'wizard'
 
 export type CharacterPerks = 'weaponSpecialist' | null
+
+// Custom sort function for slots
+const customSortFunction = (a: string, b: string) => {
+  const indexA = customSlotOrder.indexOf(a)
+  const indexB = customSlotOrder.indexOf(b)
+
+  if (indexA === -1 && indexB === -1) {
+    return a.localeCompare(b)
+  } else if (indexA === -1) {
+    return 1
+  } else if (indexB === -1) {
+    return -1
+  } else {
+    return indexA - indexB
+  }
+}
 
 export default function MarketBrowser({ data }: MarketBrowserProps) {
   const { updateSlot } = useGear()
@@ -92,7 +122,7 @@ export default function MarketBrowser({ data }: MarketBrowserProps) {
 
     // Sort the slots
     Object.keys(foundationData)
-      .sort()
+      .sort(customSortFunction)
       .forEach((slot) => {
         sortedMarketItemList[slot] = {}
 

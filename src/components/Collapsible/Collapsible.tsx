@@ -1,7 +1,7 @@
 'use client'
 
-import { ReactNode, useState } from 'react'
-import classes from 'classnames'
+import { ReactNode, useState, useEffect, useCallback } from 'react'
+import classNames from 'classnames'
 import css from './Collapsible.module.scss'
 import Triangle from '../Triangle/Triangle'
 
@@ -9,18 +9,41 @@ interface CollapsibleProps {
   title: string
   children?: ReactNode
   innerHeader?: boolean
+  isOpen?: boolean
+  onToggle?: (isOpen: boolean) => void
 }
 
-export default function Collapsible({ title, children, innerHeader }: CollapsibleProps) {
-  const [isOpen, setIsOpen] = useState(false)
+export default function Collapsible({
+  title,
+  children,
+  innerHeader,
+  isOpen: isOpenProp,
+  onToggle,
+}: CollapsibleProps) {
+  const [isOpen, setIsOpen] = useState(isOpenProp || false)
 
-  const toggleOpen = () => {
-    setIsOpen(!isOpen)
-  }
+  const toggleOpen = useCallback(() => {
+    setIsOpen((prevIsOpen) => {
+      const newIsOpen = !prevIsOpen
+      if (onToggle) {
+        onToggle(newIsOpen)
+      }
+      return newIsOpen
+    })
+  }, [onToggle])
+
+  useEffect(() => {
+    if (isOpenProp !== undefined) {
+      setIsOpen(isOpenProp)
+    }
+  }, [isOpenProp])
 
   return (
     <div className={css.collapsible}>
-      <div className={classes(css.header, { [css.innerHeader]: innerHeader })} onClick={toggleOpen}>
+      <div
+        className={classNames(css.header, { [css.innerHeader]: innerHeader })}
+        onClick={toggleOpen}
+      >
         <Triangle direction={isOpen ? 'down' : 'right'} className={css.arrow} />
         {title}
       </div>
