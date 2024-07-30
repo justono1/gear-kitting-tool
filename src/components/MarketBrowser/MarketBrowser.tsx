@@ -76,9 +76,16 @@ const customSortFunction = (a: string, b: string) => {
 }
 
 export default function MarketBrowser({ data }: MarketBrowserProps) {
-  const { updateSlot, marketBrowserTabsIsOpen } = useGear()
+  const { updateSlot, marketBrowserTabsIsOpen, setMarketBrowserTabsIsOpen } = useGear()
   const [selectedCharacterClass, setSelectedCharacterClass] = useState<CharacterClass>('fighter')
   const [selectedCharacterPerks, setSelectedCharacterPerks] = useState<CharacterPerks>(null)
+
+  const handleOnCollapseClose = (slot: string) => {
+    setMarketBrowserTabsIsOpen({
+      ...marketBrowserTabsIsOpen,
+      [slot]: false,
+    })
+  }
 
   const marketItemList = useMemo(() => {
     const filteredData =
@@ -164,8 +171,13 @@ export default function MarketBrowser({ data }: MarketBrowserProps) {
           const slotSlug = titleCaseToCamelCase(slot)
 
           return (
-            // @ts-ignore
-            <Collapsible key={slot} title={slot} isOpen={marketBrowserTabsIsOpen[slotSlug]}>
+            <Collapsible
+              key={slot}
+              title={slot}
+              // @ts-ignore
+              isOpen={marketBrowserTabsIsOpen[slotSlug]}
+              onClose={() => handleOnCollapseClose(titleCaseToCamelCase(slot))}
+            >
               {Object.entries(primaryTypes).map(([primaryType, itemNames]) => (
                 <Collapsible key={primaryType} title={primaryType} innerHeader={true}>
                   {Object.entries(itemNames).map(([itemName, rarities]) => (

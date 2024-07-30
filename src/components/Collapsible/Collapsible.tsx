@@ -11,6 +11,7 @@ interface CollapsibleProps {
   innerHeader?: boolean
   isOpen?: boolean
   onToggle?: (isOpen: boolean) => void
+  onClose?: () => void
 }
 
 export default function Collapsible({
@@ -19,6 +20,7 @@ export default function Collapsible({
   innerHeader,
   isOpen: isOpenProp,
   onToggle,
+  onClose,
 }: CollapsibleProps) {
   const [isOpen, setIsOpen] = useState(isOpenProp || false)
 
@@ -28,9 +30,12 @@ export default function Collapsible({
       if (onToggle) {
         onToggle(newIsOpen)
       }
+      if (!newIsOpen && onClose) {
+        onClose()
+      }
       return newIsOpen
     })
-  }, [onToggle])
+  }, [onToggle, onClose])
 
   useEffect(() => {
     if (isOpenProp !== undefined) {
