@@ -8,6 +8,7 @@ import Collapsible from '../Collapsible/Collapsible'
 import ItemButton from '../ItemButton/ItemButton'
 import Filters from './Filters/Filters'
 import { useGear } from '@/providers/GearProvider/GearProvider'
+import { getGearScore } from '@/providers/GearProvider/utils'
 
 interface MarketItemList {
   [slot: string]: {
@@ -138,17 +139,25 @@ export default function MarketBrowser({ data }: MarketBrowserProps) {
               <Collapsible key={primaryType} title={primaryType} innerHeader={true}>
                 {Object.entries(itemNames).map(([itemName, rarities]) => (
                   <Collapsible key={itemName} title={itemName} innerHeader={true}>
-                    {rarityOrder.map(
-                      (rarity) =>
+                    {rarityOrder.map((rarity) => {
+                      return (
                         rarities[rarity] && (
                           <ItemButton
                             key={`${uuidv4()}-${rarity}`}
                             onClick={() => updateSlot(rarities[rarity][0], rarity.toLowerCase())}
                           >
-                            {rarity}
+                            <div className={css.itemRow}>
+                              <div>{rarity}</div>
+                              <div>-</div>
+                              <div className={css.gearScore}>
+                                Gear Score:{' '}
+                                {getGearScore(rarities[rarity][0], rarity.toLowerCase())}
+                              </div>
+                            </div>
                           </ItemButton>
-                        ),
-                    )}
+                        )
+                      )
+                    })}
                   </Collapsible>
                 ))}
               </Collapsible>
