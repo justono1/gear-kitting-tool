@@ -1,5 +1,18 @@
 @import '@/scss/variables.scss';
 
+.gearScoreLevel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  h2 {
+    flex: 1;
+  }
+  .progress {
+    flex: 2;
+  }
+}
+
 .classLayout {
   position: relative;
   width: 620px;

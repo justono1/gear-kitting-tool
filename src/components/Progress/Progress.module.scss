@@ -1,0 +1,39 @@
+@import '@/scss/variables.scss';
+
+.progressContainer {
+  position: relative;
+  height: 20px;
+  border: 1px solid $color-gray-3;
+  width: 100%;
+  margin-bottom: 20px;
+  z-index: 1;
+}
+
+.progressFill {
+  height: 20px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20%;
+  background: $color-legendary;
+  z-index: 2;
+}
+
+.increment {
+  position: absolute;
+  top: -18px;
+  left: 100px;
+  font-size: 12px;
+  font-weight: $font-weight-bold;
+  z-index: 3;
+  padding-left: 6px;
+  &:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: '';
+    width: 1px;
+    height: 38px;
+    background: $color-gray-5;
+  }
+}

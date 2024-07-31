@@ -5,6 +5,10 @@ import DoubleSlot from '../DoubleSlot/DoubleSlot'
 import SingleSlot from '../SingleSlot/SingleSlot'
 import css from './ClassLayout.module.scss'
 import classes from 'classnames'
+import Progress from '../Progress/Progress'
+
+const maxGearScore = 830
+
 export default function ClassLayout() {
   const {
     state,
@@ -26,7 +30,17 @@ export default function ClassLayout() {
 
   return (
     <section>
-      <h2>Gear Score: {currentGearScore}</h2>
+      <div className={css.gearScoreLevel}>
+        <h2>Gear Score: {currentGearScore}</h2>
+        <Progress
+          className={css.progress}
+          progress={Math.round((currentGearScore / maxGearScore) * 100)}
+          increments={[
+            { label: '24', value: Math.round((24 / maxGearScore) * 100) },
+            { label: '124', value: Math.round((124 / maxGearScore) * 100) },
+          ]}
+        />
+      </div>
       <div className={css.classLayout}>
         <DoubleSlot
           className={classes([css.classSlot, css.weapon1])}
