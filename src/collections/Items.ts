@@ -1,6 +1,8 @@
 import { CollectionConfig } from 'payload'
+import collectionAutoIncrement from './hooks/collectionAutoIncrement'
 
 const Items: CollectionConfig = {
+  auth: false, // if using collectionAutoIncrement need to set default
   slug: 'items',
   access: {
     read: () => true,
@@ -8,7 +10,25 @@ const Items: CollectionConfig = {
   admin: {
     useAsTitle: 'itemName',
   },
+  hooks: {
+    // add to a collection to auto increment fields
+    beforeChange: [collectionAutoIncrement],
+  },
   fields: [
+    {
+      name: 'shortId',
+      type: 'number',
+      unique: true,
+      index: true,
+      admin: {
+        readOnly: true,
+      },
+      // used with collectionAutoIncrement (can add to multiple fields)
+      custom: {
+        increment: true,
+        firstIncrementNumber: 1,
+      },
+    },
     {
       name: 'itemName',
       type: 'text',
