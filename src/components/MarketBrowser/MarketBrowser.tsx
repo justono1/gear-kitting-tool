@@ -3,7 +3,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import { Item } from 'payload-types'
 import css from './MarketBrowser.module.scss'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import Collapsible from '../Collapsible/Collapsible'
 import ItemButton from '../ItemButton/ItemButton'
 import Filters from './Filters/Filters'
@@ -182,6 +182,8 @@ export default function MarketBrowser({ data }: MarketBrowserProps) {
                         return (
                           rarities[rarity] && (
                             <ItemButton
+                              item={rarities[rarity][0]}
+                              rarity={rarity.toLowerCase()}
                               key={`${uuidv4()}-${rarity}`}
                               onClick={() => updateSlot(rarities[rarity][0], rarity.toLowerCase())}
                             >

@@ -29,4 +29,86 @@
       font-size: 12px;
     }
   }
+
+  .slotPopup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    padding: 20px;
+    background: lighten($color-gray-2, 12%);
+    border: 1px solid $color-gray-3;
+    max-width: 320px;
+    min-width: 300px;
+    text-align: center;
+  }
+
+  .divider {
+    margin: 10px 0;
+    border-width: 2px;
+  }
+
+  .poor {
+    border-color: $color-poor;
+    h3,
+    .h3,
+    p,
+    strong {
+      color: $color-poor;
+    }
+  }
+  .common {
+    border-color: $color-common;
+    h3,
+    .h3,
+    p,
+    strong {
+      color: $color-common;
+    }
+  }
+  .uncommon {
+    border-color: $color-uncommon;
+    h3,
+    .h3,
+    p,
+    strong {
+      color: $color-uncommon;
+    }
+  }
+  .rare {
+    border-color: $color-rare;
+    h3,
+    .h3,
+    p,
+    strong {
+      color: $color-rare;
+    }
+  }
+  .epic {
+    border-color: $color-epic;
+    h3,
+    .h3,
+    p,
+    strong {
+      color: $color-epic;
+    }
+  }
+  .legendary {
+    border-color: $color-legendary;
+    h3,
+    .h3,
+    p,
+    strong {
+      color: $color-legendary;
+    }
+  }
+  .unique {
+    border-color: $color-unique;
+    h3,
+    .h3,
+    p,
+    strong {
+      color: $color-unique;
+    }
+  }
 }
