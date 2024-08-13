@@ -108,25 +108,3 @@ export const gearScoreTable: { [key: string]: { [rarity: string]: number } } = {
     unique: 20,
   },
 }
-
-export const shortStateKeyMap: { [key: string]: string } = {
-  head: 'h',
-  necklace: 'n',
-  hands: 'ha',
-  chest: 'c',
-  back: 'b',
-  ring1: 'r1',
-  legs: 'l',
-  ring2: 'r2',
-  feet: 'f',
-  utility1: 'u1',
-  utility2: 'u2',
-  utility3: 'u3',
-  utility4: 'u4',
-  utility5: 'u5',
-  utility6: 'u6',
-}
-
-export const translateShortStateKey = (longKey: string): string => {
-  return shortStateKeyMap[longKey] || longKey
-}

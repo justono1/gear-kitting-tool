@@ -17,51 +17,39 @@ import {
   GearState,
   GearSlots,
   WeaponSlot,
-  GearStore,
   MarketBrowserTabsIsOpen,
   CharacterClass,
   CharacterPerks,
 } from './types'
-import {
-  findFirstAvailableSlot,
-  getGearScore,
-  translateShortStateKey,
-  translateShortToLongStateKey,
-} from './utils'
-import { splitAfterWord } from '@/common/utils/splitAfterWord'
+import { findFirstAvailableSlot, getGearScore } from './utils'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { objectToBase64 } from '@/common/utils/objectToBase64'
-import { base64ToObject } from '@/common/utils/base64ToObject'
 import { usePrevious } from '@/common/hooks/usePrevious'
 
 // Define the initial state
-const initialState: GearStore = {
-  fullStore: {
-    weapon1: {
-      primaryWeapon: { item: null, rarity: null },
-      secondaryWeapon: { item: null, rarity: null },
-    },
-    weapon2: {
-      primaryWeapon: { item: null, rarity: null },
-      secondaryWeapon: { item: null, rarity: null },
-    },
-    head: { item: null, rarity: null },
-    necklace: { item: null, rarity: null },
-    hands: { item: null, rarity: null },
-    chest: { item: null, rarity: null },
-    back: { item: null, rarity: null },
-    ring1: { item: null, rarity: null },
-    legs: { item: null, rarity: null },
-    ring2: { item: null, rarity: null },
-    feet: { item: null, rarity: null },
-    utility1: { item: null, rarity: null },
-    utility2: { item: null, rarity: null },
-    utility3: { item: null, rarity: null },
-    utility4: { item: null, rarity: null },
-    utility5: { item: null, rarity: null },
-    utility6: { item: null, rarity: null },
+const initialState: GearState = {
+  weapon1: {
+    primaryWeapon: { item: null, rarity: null },
+    secondaryWeapon: { item: null, rarity: null },
   },
-  shortStore: {},
+  weapon2: {
+    primaryWeapon: { item: null, rarity: null },
+    secondaryWeapon: { item: null, rarity: null },
+  },
+  head: { item: null, rarity: null },
+  necklace: { item: null, rarity: null },
+  hands: { item: null, rarity: null },
+  chest: { item: null, rarity: null },
+  back: { item: null, rarity: null },
+  ring1: { item: null, rarity: null },
+  legs: { item: null, rarity: null },
+  ring2: { item: null, rarity: null },
+  feet: { item: null, rarity: null },
+  utility1: { item: null, rarity: null },
+  utility2: { item: null, rarity: null },
+  utility3: { item: null, rarity: null },
+  utility4: { item: null, rarity: null },
+  utility5: { item: null, rarity: null },
+  utility6: { item: null, rarity: null },
 }
 
 // Define action types
@@ -99,13 +87,13 @@ interface DeleteWeaponAction {
 type GearAction = UpdateSlotAction | DeleteSlotAction | DeleteWeaponAction
 
 // Create reducer
-const gearReducer = (state: GearStore, action: GearAction): GearStore => {
+const gearReducer = (state: GearState, action: GearAction): GearState => {
   switch (action.type) {
     case UPDATE_SLOT:
-      const slot = findFirstAvailableSlot(state.fullStore, action.payload.data.item!)
+      const slot = findFirstAvailableSlot(state, action.payload.data.item!)
       if (slot) {
         if (slot === 'weapon1' || slot === 'weapon2') {
-          const weaponSlot = { ...state.fullStore[slot] } as WeaponSlot
+          const weaponSlot = { ...state[slot] } as WeaponSlot
           if (action.payload.data.item?.slot === 'primaryWeapon') {
             weaponSlot.primaryWeapon.item = action.payload.data.item
             weaponSlot.primaryWeapon.rarity = action.payload.data.rarity
@@ -128,86 +116,38 @@ const gearReducer = (state: GearStore, action: GearAction): GearStore => {
 
           return {
             ...state,
-            fullStore: {
-              ...state.fullStore,
-              [slot]: weaponSlot,
-            },
-            shortStore: {
-              ...state.shortStore,
-              ...(weaponSlot.primaryWeapon.item
-                ? {
-                    [`w${
-                      splitAfterWord(slot, 'weapon')[1]
-                    }pr`]: `${weaponSlot.primaryWeapon.item.id}:${weaponSlot.primaryWeapon.rarity}`,
-                  }
-                : {}),
-              ...(weaponSlot.secondaryWeapon.item
-                ? {
-                    [`w${
-                      splitAfterWord(slot, 'weapon')[1]
-                    }sc`]: `${weaponSlot.secondaryWeapon.item.id}:${weaponSlot.secondaryWeapon.rarity}`,
-                  }
-                : {}),
-            },
+            [slot]: weaponSlot,
           }
         } else {
           return {
             ...state,
-            fullStore: {
-              ...state.fullStore,
-              [slot]: action.payload.data,
-            },
-            shortStore: {
-              ...state.shortStore,
-              [translateShortStateKey(
-                slot,
-              )]: `${action.payload.data.item.id}:${action.payload.data.rarity}`,
-            },
+            [slot]: action.payload.data,
           }
         }
       }
       return state
     case DELETE_SLOT:
-      // @ts-ignore
-      const { [translateShortStateKey(action.payload.slot)]: removedSlot, ...remainingSlots } =
-        state.shortStore
-
       return {
         ...state,
-        fullStore: {
-          ...state.fullStore,
-          [action.payload.slot]: { item: null, rarity: null },
-        },
-        shortStore: remainingSlots,
+        [action.payload.slot]: { item: null, rarity: null },
       }
     case DELETE_WEAPON:
-      const weaponSlot = { ...state.fullStore[action.payload.slot] } as WeaponSlot
-      const shortStoreKeyBase = `w${splitAfterWord(action.payload.slot, 'weapon')[1]}`
-      let slotType: string
+      const weaponSlot = { ...state[action.payload.slot] } as WeaponSlot
       if (action.payload.weaponType === 'primaryWeapon') {
         weaponSlot.primaryWeapon = {
           item: null,
           rarity: null,
         }
-        slotType = 'pr'
       } else if (action.payload.weaponType === 'secondaryWeapon') {
         weaponSlot.secondaryWeapon = {
           item: null,
           rarity: null,
         }
-        slotType = 'sc'
       }
-
-      // @ts-ignore
-      const { [`${shortStoreKeyBase + slotType}`]: removedWeapon, ...restSlots } = state.shortStore
 
       return {
         ...state,
-        fullStore: {
-          ...state.fullStore,
-          [action.payload.slot]: weaponSlot,
-        },
-        shortStore: restSlots,
+        [action.payload.slot]: weaponSlot,
       }
     default:
       return state
@@ -216,7 +156,7 @@ const gearReducer = (state: GearStore, action: GearAction): GearStore => {
 
 // Define the context value shape
 interface GearContextValue {
-  state: GearStore
+  state: GearState
   updateSlot: (item: Item, rarity: string) => void
   deleteSlot: (slot: keyof GearState) => void
   deleteWeapon: (
@@ -274,7 +214,7 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
 
   const previousCharacterClassRouteData = usePrevious(characterClassRouteData)
   const gearRouteData = searchParams.get('gear')
-  const decodedGearData = gearRouteData ? base64ToObject(decodeURIComponent(gearRouteData)) : {}
+  const decodedGearData = gearRouteData
   const previousDecodedGearData = usePrevious(decodedGearData)
 
   // Action creator for updating a slot
@@ -316,9 +256,9 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
 
   // Gear Route Setter
   useEffect(() => {
-    const encodedState = objectToBase64(state.shortStore)
+    // const encodedState = objectToBase64(state.shortStore)
     const newSearchParams = new URLSearchParams(searchParams.toString())
-    newSearchParams.set('gear', encodedState)
+    // newSearchParams.set('gear', encodedState)
     newSearchParams.set('class', selectedCharacterClass)
 
     router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false })
@@ -326,24 +266,24 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
 
   // Gear Route Loader
   useEffect(() => {
-    const shortStore = state.shortStore
+    // const shortStore = state.shortStore
 
-    const hasShortStore = Object.keys(shortStore).length > 0
-    const hasGearData = Object.keys(decodedGearData).length > 0
-    const isSameGearData =
-      JSON.stringify(decodedGearData) === JSON.stringify(previousDecodedGearData)
+    // const hasShortStore = Object.keys(shortStore).length > 0
+    // const hasGearData = Object.keys(decodedGearData).length > 0
+    // const isSameGearData =
+    //   JSON.stringify(decodedGearData) === JSON.stringify(previousDecodedGearData)
 
-    if (!hasShortStore && hasGearData && itemData && !isSameGearData) {
-      Object.keys(decodedGearData).forEach((key) => {
-        // each item in decodedGearData[key] is a string with itemID:rarity
-        const decodedValues = decodedGearData[key].split(':')
-        const foundItem = itemData.filter((item) => item.id === decodedValues[0])
-        if (foundItem.length === 1) {
-          //should only find one or none
-          updateSlot(foundItem[0], decodedValues[1])
-        }
-      })
-    }
+    // if (!hasShortStore && hasGearData && itemData && !isSameGearData) {
+    //   Object.keys(decodedGearData).forEach((key) => {
+    //     // each item in decodedGearData[key] is a string with itemID:rarity
+    //     const decodedValues = decodedGearData[key].split(':')
+    //     const foundItem = itemData.filter((item) => item.id === decodedValues[0])
+    //     if (foundItem.length === 1) {
+    //       //should only find one or none
+    //       updateSlot(foundItem[0], decodedValues[1])
+    //     }
+    //   })
+    // }
 
     if (characterClassRouteData && characterClassRouteData !== previousCharacterClassRouteData) {
       setSelectedCharacterClass(characterClassRouteData as CharacterClass)
@@ -362,18 +302,18 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
   // Method to calculate the current gear score
   const currentGearScore = useMemo(() => {
     let totalScore = 0
-    for (const slot of Object.keys(state.fullStore) as GearSlots[]) {
+    for (const slot of Object.keys(state) as GearSlots[]) {
       if (slot === 'weapon1' || slot === 'weapon2') {
         totalScore += getGearScore(
-          state.fullStore[slot].primaryWeapon?.item,
-          state.fullStore[slot].primaryWeapon?.rarity,
+          state[slot].primaryWeapon?.item,
+          state[slot].primaryWeapon?.rarity,
         )
         totalScore += getGearScore(
-          state.fullStore[slot].secondaryWeapon?.item,
-          state.fullStore[slot].secondaryWeapon?.rarity,
+          state[slot].secondaryWeapon?.item,
+          state[slot].secondaryWeapon?.rarity,
         )
       } else {
-        totalScore += getGearScore(state.fullStore[slot]?.item, state.fullStore[slot]?.rarity)
+        totalScore += getGearScore(state[slot]?.item, state[slot]?.rarity)
       }
     }
     return totalScore
