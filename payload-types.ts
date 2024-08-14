@@ -58,6 +58,7 @@ export interface User {
  */
 export interface Item {
   id: string;
+  shortId?: number | null;
   itemName: string;
   rarity: ('poor' | 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'unique')[];
   class: ('barbarian' | 'bard' | 'cleric' | 'druid' | 'fighter' | 'ranger' | 'rouge' | 'warlock' | 'wizard')[];
