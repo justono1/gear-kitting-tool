@@ -1,6 +1,7 @@
 import { Item } from 'payload-types'
 import { GearSlots, GearState, WeaponSlot } from './types'
-import { gearScoreTable } from './data'
+import { gearScoreTable, rarityShortCode } from './data'
+import { base62ToNumber, numberToBase62 } from '@/common/utils/base62Operators'
 
 // Helper function to find the first available slot
 export const findFirstAvailableSlot = (state: GearState, item: Item): keyof GearState | null => {
@@ -73,4 +74,62 @@ export const getGearScore = (item: Item | null | undefined, rarity: string | nul
     return gearScoreTable[weaponType][rarity] || 0
   }
   return gearScoreTable[slot]?.[rarity] || 0
+}
+
+export const encodeGearState = (state: GearState): string => {
+  const encodedArrayItems = Object.keys(state).reduce<string[]>((acc, key) => {
+    if (key === 'weapon1' || key === 'weapon2') {
+      acc.push(
+        // @ts-ignore
+        state[key].primaryWeapon.item && state[key].primaryWeapon.rarity
+          ? // @ts-ignore
+            `${rarityShortCode[state[key].primaryWeapon.rarity]}${numberToBase62(
+              // @ts-ignore
+              state[key].primaryWeapon.item.shortId,
+            )}`
+          : null,
+      )
+      acc.push(
+        // @ts-ignore
+        state[key].secondaryWeapon.item && state[key].secondaryWeapon.rarity
+          ? // @ts-ignore
+            `${rarityShortCode[state[key].secondaryWeapon.rarity]}${numberToBase62(
+              // @ts-ignore
+              state[key].secondaryWeapon.item.shortId,
+            )}`
+          : null,
+      )
+    } else {
+      acc.push(
+        // @ts-ignore
+        state[key].item && state[key].rarity
+          ? // @ts-ignore
+            `${rarityShortCode[state[key].rarity]}${numberToBase62(
+              // @ts-ignore
+              state[key].item.shortId,
+            )}`
+          : null,
+      )
+    }
+    return acc
+  }, [])
+
+  return encodedArrayItems.join('-')
+}
+
+export const decodeItem = (
+  encodedItem: string | null,
+): { shortId: number | null; rarity: string | null } => {
+  if (!encodedItem) {
+    return { shortId: null, rarity: null }
+  }
+  const rarity = Object.keys(rarityShortCode).find(
+    // @ts-ignore
+    (key) => rarityShortCode[key] === encodedItem[0],
+  )
+  const shortId = base62ToNumber(encodedItem.slice(1))
+  return {
+    shortId: shortId,
+    rarity: rarity || null,
+  }
 }

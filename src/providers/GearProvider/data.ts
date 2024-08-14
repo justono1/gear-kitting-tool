@@ -108,3 +108,13 @@ export const gearScoreTable: { [key: string]: { [rarity: string]: number } } = {
     unique: 20,
   },
 }
+
+export const rarityShortCode = {
+  poor: 'p',
+  common: 'c',
+  uncommon: 'n',
+  rare: 'r',
+  epic: 'e',
+  legendary: 'l',
+  unique: 'u',
+}

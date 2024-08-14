@@ -21,7 +21,7 @@ import {
   CharacterClass,
   CharacterPerks,
 } from './types'
-import { findFirstAvailableSlot, getGearScore } from './utils'
+import { decodeItem, encodeGearState, findFirstAvailableSlot, getGearScore } from './utils'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { usePrevious } from '@/common/hooks/usePrevious'
 
@@ -212,10 +212,11 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
     utility: false,
   })
 
+  const [isGearRouteInitialized, setIsGearRouteInitialized] = useState(false)
+
   const previousCharacterClassRouteData = usePrevious(characterClassRouteData)
   const gearRouteData = searchParams.get('gear')
-  const decodedGearData = gearRouteData
-  const previousDecodedGearData = usePrevious(decodedGearData)
+  const previousGearRouteData = usePrevious(gearRouteData)
 
   // Action creator for updating a slot
   const updateSlot = useCallback((item: Item, rarity: string) => {
@@ -256,34 +257,34 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
 
   // Gear Route Setter
   useEffect(() => {
-    // const encodedState = objectToBase64(state.shortStore)
+    const encodedState = encodeGearState(state)
     const newSearchParams = new URLSearchParams(searchParams.toString())
-    // newSearchParams.set('gear', encodedState)
     newSearchParams.set('class', selectedCharacterClass)
+    newSearchParams.set('gear', encodedState)
 
     router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false })
+
+    setIsGearRouteInitialized(true)
   }, [state, searchParams, pathname, router, selectedCharacterClass])
 
   // Gear Route Loader
   useEffect(() => {
-    // const shortStore = state.shortStore
+    const isSameGearData = gearRouteData === previousGearRouteData
 
-    // const hasShortStore = Object.keys(shortStore).length > 0
-    // const hasGearData = Object.keys(decodedGearData).length > 0
-    // const isSameGearData =
-    //   JSON.stringify(decodedGearData) === JSON.stringify(previousDecodedGearData)
+    if (itemData && gearRouteData && !isSameGearData && !isGearRouteInitialized) {
+      const splitGearData = gearRouteData.split('-')
 
-    // if (!hasShortStore && hasGearData && itemData && !isSameGearData) {
-    //   Object.keys(decodedGearData).forEach((key) => {
-    //     // each item in decodedGearData[key] is a string with itemID:rarity
-    //     const decodedValues = decodedGearData[key].split(':')
-    //     const foundItem = itemData.filter((item) => item.id === decodedValues[0])
-    //     if (foundItem.length === 1) {
-    //       //should only find one or none
-    //       updateSlot(foundItem[0], decodedValues[1])
-    //     }
-    //   })
-    // }
+      splitGearData.forEach((gearItem) => {
+        const decodedItem = decodeItem(gearItem)
+        if (decodedItem.shortId && decodedItem.rarity) {
+          const foundItem = itemData.filter((item) => item.shortId === decodedItem.shortId)
+          if (foundItem.length === 1) {
+            //should only find one or none
+            updateSlot(foundItem[0], decodedItem.rarity)
+          }
+        }
+      })
+    }
 
     if (characterClassRouteData && characterClassRouteData !== previousCharacterClassRouteData) {
       setSelectedCharacterClass(characterClassRouteData as CharacterClass)
@@ -291,12 +292,14 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
   }, [
     state,
     itemData,
-    decodedGearData,
-    previousDecodedGearData,
+    gearRouteData,
+    previousGearRouteData,
     updateSlot,
     characterClassRouteData,
     previousCharacterClassRouteData,
     setSelectedCharacterClass,
+    setIsGearRouteInitialized,
+    isGearRouteInitialized,
   ])
 
   // Method to calculate the current gear score
