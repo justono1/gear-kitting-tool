@@ -38,6 +38,7 @@ export default function ClassLayout() {
           increments={[
             { label: '24', value: Math.round((24 / maxGearScore) * 100) },
             { label: '124', value: Math.round((124 / maxGearScore) * 100) },
+            { label: '225', value: Math.round((225 / maxGearScore) * 100) },
           ]}
         />
       </div>
