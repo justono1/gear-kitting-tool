@@ -14,6 +14,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <html className={inter.className}>
       <head>
         <title>Kitting Tool</title>
+        <link rel="icon" href="/favicon.jpg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <meta property="og:title" content="Kitting Tool" />
