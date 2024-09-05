@@ -15,6 +15,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <meta property="og:image" content="https://kittingtool.com/ogimage.jpg" />
         <link
           href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap"
           rel="stylesheet"
