@@ -184,7 +184,14 @@ interface GearProviderProps {
 }
 
 export const GearProvider = ({ children, itemData }: GearProviderProps) => {
-  const [state, dispatch] = useReducer(gearReducer, initialState)
+  const [state, dispatch] = useReducer(gearReducer, initialState, (initial) => {
+    if (typeof window !== 'undefined') {
+      const savedState = localStorage.getItem('gearState')
+      return savedState ? JSON.parse(savedState) : initial
+    }
+
+    return initial;
+  })
 
   const refs = useRef<{ [key: string]: RefObject<HTMLDivElement> }>({})
 
@@ -217,6 +224,14 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
   const previousCharacterClassRouteData = usePrevious(characterClassRouteData)
   const gearRouteData = searchParams.get('gear')
   const previousGearRouteData = usePrevious(gearRouteData)
+
+  // Sync state to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('gearState', JSON.stringify(state))
+      localStorage.setItem('gearStateVersion', `${process.env.NEXT_PUBLIC_GEAR_STATE_LOCAL_STORAGE_VERSION}`)
+    }
+  }, [state])
 
   // Action creator for updating a slot
   const updateSlot = useCallback((item: Item, rarity: string) => {
@@ -256,51 +271,51 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
   }
 
   // Gear Route Setter
-  useEffect(() => {
-    const encodedState = encodeGearState(state)
-    const newSearchParams = new URLSearchParams(searchParams.toString())
-    newSearchParams.set('class', selectedCharacterClass)
-    newSearchParams.set('gear', encodedState)
+  // useEffect(() => {
+  //   const encodedState = encodeGearState(state)
+  //   const newSearchParams = new URLSearchParams(searchParams.toString())
+  //   newSearchParams.set('class', selectedCharacterClass)
+  //   newSearchParams.set('gear', encodedState)
 
-    router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false })
+  //   router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false })
 
-    setIsGearRouteInitialized(true)
-  }, [state, searchParams, pathname, router, selectedCharacterClass])
+  //   setIsGearRouteInitialized(true)
+  // }, [state, searchParams, pathname, router, selectedCharacterClass])
 
   // Gear Route Loader
-  useEffect(() => {
-    const isSameGearData = gearRouteData === previousGearRouteData
+  // useEffect(() => {
+  //   const isSameGearData = gearRouteData === previousGearRouteData
 
-    if (itemData && gearRouteData && !isSameGearData && !isGearRouteInitialized) {
-      const splitGearData = gearRouteData.split('-')
+  //   if (itemData && gearRouteData && !isSameGearData && !isGearRouteInitialized) {
+  //     const splitGearData = gearRouteData.split('-')
 
-      splitGearData.forEach((gearItem) => {
-        const decodedItem = decodeItem(gearItem)
-        if (decodedItem.shortId && decodedItem.rarity) {
-          const foundItem = itemData.filter((item) => item.shortId === decodedItem.shortId)
-          if (foundItem.length === 1) {
-            //should only find one or none
-            updateSlot(foundItem[0], decodedItem.rarity)
-          }
-        }
-      })
-    }
+  //     splitGearData.forEach((gearItem) => {
+  //       const decodedItem = decodeItem(gearItem)
+  //       if (decodedItem.shortId && decodedItem.rarity) {
+  //         const foundItem = itemData.filter((item) => item.shortId === decodedItem.shortId)
+  //         if (foundItem.length === 1) {
+  //           //should only find one or none
+  //           updateSlot(foundItem[0], decodedItem.rarity)
+  //         }
+  //       }
+  //     })
+  //   }
 
-    if (characterClassRouteData && characterClassRouteData !== previousCharacterClassRouteData) {
-      setSelectedCharacterClass(characterClassRouteData as CharacterClass)
-    }
-  }, [
-    state,
-    itemData,
-    gearRouteData,
-    previousGearRouteData,
-    updateSlot,
-    characterClassRouteData,
-    previousCharacterClassRouteData,
-    setSelectedCharacterClass,
-    setIsGearRouteInitialized,
-    isGearRouteInitialized,
-  ])
+  //   if (characterClassRouteData && characterClassRouteData !== previousCharacterClassRouteData) {
+  //     setSelectedCharacterClass(characterClassRouteData as CharacterClass)
+  //   }
+  // }, [
+  //   state,
+  //   itemData,
+  //   gearRouteData,
+  //   previousGearRouteData,
+  //   updateSlot,
+  //   characterClassRouteData,
+  //   previousCharacterClassRouteData,
+  //   setSelectedCharacterClass,
+  //   setIsGearRouteInitialized,
+  //   isGearRouteInitialized,
+  // ])
 
   // Method to calculate the current gear score
   const currentGearScore = useMemo(() => {
