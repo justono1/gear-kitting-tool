@@ -10,7 +10,7 @@ export default function Header() {
   const origin = typeof window !== 'undefined' && window.location.origin
 
   const shareUrl = useMemo(() => {
-    return `${origin}${pathname}?${searchParams}`
+    return `${origin}/share?${searchParams}`
   }, [pathname, searchParams, origin])
 
   const [copied, setCopied] = useState(false)
