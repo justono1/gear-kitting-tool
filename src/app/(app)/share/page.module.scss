@@ -1,0 +1,19 @@
+@import '@/scss/variables.scss';
+
+.gridContainer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 100px;
+  width: 100%;
+}
+
+.itemColumn {
+  flex: 1;
+  max-width: 600px;
+}
+
+.slotColumn {
+  position: sticky;
+  top: 40px;
+}
