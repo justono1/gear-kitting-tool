@@ -77,36 +77,36 @@ export const getGearScore = (item: Item | null | undefined, rarity: string | nul
 }
 
 export const encodeGearState = (state: GearState): string => {
-  const encodedArrayItems = Object.keys(state).reduce<string[]>((acc, key) => {
+  const encodedArrayItems = Object.keys(state.slots).reduce<string[]>((acc, key) => {
     if (key === 'weapon1' || key === 'weapon2') {
       acc.push(
         // @ts-ignore
-        state[key].primaryWeapon.item && state[key].primaryWeapon.rarity
+        state.slots[key].primaryWeapon.item && state.slots[key].primaryWeapon.rarity
           ? // @ts-ignore
-            `${rarityShortCode[state[key].primaryWeapon.rarity]}${numberToBase62(
+            `${rarityShortCode[state.slots[key].primaryWeapon.rarity]}${numberToBase62(
               // @ts-ignore
-              state[key].primaryWeapon.item.shortId,
+              state.slots[key].primaryWeapon.item.shortId,
             )}`
           : null,
       )
       acc.push(
         // @ts-ignore
-        state[key].secondaryWeapon.item && state[key].secondaryWeapon.rarity
+        state.slots[key].secondaryWeapon.item && state.slots[key].secondaryWeapon.rarity
           ? // @ts-ignore
             `${rarityShortCode[state[key].secondaryWeapon.rarity]}${numberToBase62(
               // @ts-ignore
-              state[key].secondaryWeapon.item.shortId,
+              state.slots[key].secondaryWeapon.item.shortId,
             )}`
           : null,
       )
     } else {
       acc.push(
         // @ts-ignore
-        state[key].item && state[key].rarity
+        state.slots[key].item && state.slots[key].rarity
           ? // @ts-ignore
-            `${rarityShortCode[state[key].rarity]}${numberToBase62(
+            `${rarityShortCode[state.slots[key].rarity]}${numberToBase62(
               // @ts-ignore
-              state[key].item.shortId,
+              state.slots[key].item.shortId,
             )}`
           : null,
       )

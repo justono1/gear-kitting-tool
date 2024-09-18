@@ -23,7 +23,6 @@ import {
 } from './types'
 import { decodeItem, encodeGearState, findFirstAvailableSlot, getGearScore } from './utils'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { usePrevious } from '@/common/hooks/usePrevious'
 
 // Define the initial state
 const initialState: GearState = {
@@ -53,6 +52,7 @@ const initialState: GearState = {
     utility6: { item: null, rarity: null },
   },
   characterClass: 'fighter',
+  characterPerks: null,
 }
 
 // Define action types
@@ -129,12 +129,18 @@ const gearReducer = (state: GearState, action: GearAction): GearState => {
 
           return {
             ...state,
-            [slot]: weaponSlot,
+            slots: {
+              ...state.slots,
+              [slot]: weaponSlot,
+            },
           }
         } else {
           return {
             ...state,
-            [slot]: action.payload.data,
+            slots: {
+              ...state.slots,
+              [slot]: action.payload.data,
+            },
           }
         }
       }
@@ -241,17 +247,15 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
     utility: false,
   })
 
-  const [isGearRouteInitialized, setIsGearRouteInitialized] = useState(false)
-
-  const previousCharacterClassRouteData = usePrevious(characterClassRouteData)
-  const gearRouteData = searchParams.get('gear')
-  const previousGearRouteData = usePrevious(gearRouteData)
-
   const shareUrl = useMemo(() => {
     const encodedState = encodeGearState(state)
     const newSearchParams = new URLSearchParams(searchParams.toString())
     newSearchParams.set('class', selectedCharacterClass)
     newSearchParams.set('gear', encodedState)
+
+    if (selectedCharacterPerks) {
+      newSearchParams.set('perks', selectedCharacterPerks)
+    }
 
     return `${origin}/share?${newSearchParams.toString()}`
   }, [pathname, searchParams, origin, state])

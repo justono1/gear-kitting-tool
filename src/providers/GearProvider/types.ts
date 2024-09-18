@@ -59,7 +59,7 @@ export interface GearState {
     utility6: { item: Item | null; rarity: string | null }
   }
   characterClass: CharacterClass
-  characterPerks?: CharacterPerks
+  characterPerks: CharacterPerks
 }
 
 export type GearSlot = keyof GearState['slots']
