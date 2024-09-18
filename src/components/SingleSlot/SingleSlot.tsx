@@ -15,7 +15,7 @@ import css from './SingleSlot.module.scss'
 import { SlotSize } from '@/common/utils/determineSlotSize'
 import { ExcludeFromUnion } from '@/common/utils/typeHelpers'
 import { MouseEventHandler, useMemo, useState } from 'react'
-import { GearSlots } from '@/providers/GearProvider/types'
+import { GearSlot } from '@/providers/GearProvider/types'
 import { useGear } from '@/providers/GearProvider/GearProvider'
 import { createAbbreviation } from '@/common/utils/createAbbreviation'
 import { getGearScore } from '@/providers/GearProvider/utils'
@@ -23,7 +23,7 @@ import { arrayCamelCaseToCommaSeparatedTitleCase } from '@/common/utils/slugToHu
 
 interface SingleSlotProps {
   item: Item | null
-  slotSlug: GearSlots
+  slotSlug: GearSlot
   slotSize: ExcludeFromUnion<SlotSize, 'largeTwo'>
   itemRarity: string | null
   className?: string

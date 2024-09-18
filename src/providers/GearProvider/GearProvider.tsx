@@ -15,7 +15,7 @@ import React, {
 } from 'react'
 import {
   GearState,
-  GearSlots,
+  GearSlot,
   WeaponSlot,
   MarketBrowserTabsIsOpen,
   CharacterClass,
@@ -27,29 +27,32 @@ import { usePrevious } from '@/common/hooks/usePrevious'
 
 // Define the initial state
 const initialState: GearState = {
-  weapon1: {
-    primaryWeapon: { item: null, rarity: null },
-    secondaryWeapon: { item: null, rarity: null },
+  slots: {
+    weapon1: {
+      primaryWeapon: { item: null, rarity: null },
+      secondaryWeapon: { item: null, rarity: null },
+    },
+    weapon2: {
+      primaryWeapon: { item: null, rarity: null },
+      secondaryWeapon: { item: null, rarity: null },
+    },
+    head: { item: null, rarity: null },
+    necklace: { item: null, rarity: null },
+    hands: { item: null, rarity: null },
+    chest: { item: null, rarity: null },
+    back: { item: null, rarity: null },
+    ring1: { item: null, rarity: null },
+    legs: { item: null, rarity: null },
+    ring2: { item: null, rarity: null },
+    feet: { item: null, rarity: null },
+    utility1: { item: null, rarity: null },
+    utility2: { item: null, rarity: null },
+    utility3: { item: null, rarity: null },
+    utility4: { item: null, rarity: null },
+    utility5: { item: null, rarity: null },
+    utility6: { item: null, rarity: null },
   },
-  weapon2: {
-    primaryWeapon: { item: null, rarity: null },
-    secondaryWeapon: { item: null, rarity: null },
-  },
-  head: { item: null, rarity: null },
-  necklace: { item: null, rarity: null },
-  hands: { item: null, rarity: null },
-  chest: { item: null, rarity: null },
-  back: { item: null, rarity: null },
-  ring1: { item: null, rarity: null },
-  legs: { item: null, rarity: null },
-  ring2: { item: null, rarity: null },
-  feet: { item: null, rarity: null },
-  utility1: { item: null, rarity: null },
-  utility2: { item: null, rarity: null },
-  utility3: { item: null, rarity: null },
-  utility4: { item: null, rarity: null },
-  utility5: { item: null, rarity: null },
-  utility6: { item: null, rarity: null },
+  characterClass: 'fighter',
 }
 
 // Define action types
@@ -62,7 +65,7 @@ const HYDRATE_FROM_LOCAL_STORAGE = 'HYDRATE_FROM_LOCAL_STORAGE'
 interface UpdateSlotAction {
   type: typeof UPDATE_SLOT
   payload: {
-    slot: keyof GearState
+    slot: GearSlot
     data: {
       item: Item
       rarity: string
@@ -73,7 +76,7 @@ interface UpdateSlotAction {
 interface DeleteSlotAction {
   type: typeof DELETE_SLOT
   payload: {
-    slot: GearSlots
+    slot: GearSlot
   }
 }
 
@@ -103,7 +106,7 @@ const gearReducer = (state: GearState, action: GearAction): GearState => {
       const slot = findFirstAvailableSlot(state, action.payload.data.item!)
       if (slot) {
         if (slot === 'weapon1' || slot === 'weapon2') {
-          const weaponSlot = { ...state[slot] } as WeaponSlot
+          const weaponSlot = { ...state.slots[slot] } as WeaponSlot
           if (action.payload.data.item?.slot === 'primaryWeapon') {
             weaponSlot.primaryWeapon.item = action.payload.data.item
             weaponSlot.primaryWeapon.rarity = action.payload.data.rarity
@@ -142,7 +145,7 @@ const gearReducer = (state: GearState, action: GearAction): GearState => {
         [action.payload.slot]: { item: null, rarity: null },
       }
     case DELETE_WEAPON:
-      const weaponSlot = { ...state[action.payload.slot] } as WeaponSlot
+      const weaponSlot = { ...state.slots[action.payload.slot] } as WeaponSlot
       if (action.payload.weaponType === 'primaryWeapon') {
         weaponSlot.primaryWeapon = {
           item: null,
@@ -170,7 +173,7 @@ const gearReducer = (state: GearState, action: GearAction): GearState => {
 interface GearContextValue {
   state: GearState
   updateSlot: (item: Item, rarity: string) => void
-  deleteSlot: (slot: keyof GearState) => void
+  deleteSlot: (slot: GearSlot) => void
   deleteWeapon: (
     slot: 'weapon1' | 'weapon2',
     weaponType: 'primaryWeapon' | 'secondaryWeapon',
@@ -268,12 +271,12 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
   const updateSlot = useCallback((item: Item, rarity: string) => {
     dispatch({
       type: UPDATE_SLOT,
-      payload: { slot: item.slot as keyof GearState, data: { item, rarity } },
+      payload: { slot: item.slot as GearSlot, data: { item, rarity } },
     })
   }, [])
 
   // Action creator for deleting a slot
-  const deleteSlot = useCallback((slot: keyof GearState) => {
+  const deleteSlot = useCallback((slot: GearSlot) => {
     dispatch({
       type: DELETE_SLOT,
       payload: { slot },
@@ -304,18 +307,18 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
   // Method to calculate the current gear score
   const currentGearScore = useMemo(() => {
     let totalScore = 0
-    for (const slot of Object.keys(state) as GearSlots[]) {
+    for (const slot of Object.keys(state) as GearSlot[]) {
       if (slot === 'weapon1' || slot === 'weapon2') {
         totalScore += getGearScore(
-          state[slot].primaryWeapon?.item,
-          state[slot].primaryWeapon?.rarity,
+          state.slots[slot].primaryWeapon?.item,
+          state.slots[slot].primaryWeapon?.rarity,
         )
         totalScore += getGearScore(
-          state[slot].secondaryWeapon?.item,
-          state[slot].secondaryWeapon?.rarity,
+          state.slots[slot].secondaryWeapon?.item,
+          state.slots[slot].secondaryWeapon?.rarity,
         )
       } else {
-        totalScore += getGearScore(state[slot]?.item, state[slot]?.rarity)
+        totalScore += getGearScore(state.slots[slot]?.item, state.slots[slot]?.rarity)
       }
     }
     return totalScore

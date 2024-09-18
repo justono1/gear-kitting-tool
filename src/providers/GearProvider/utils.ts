@@ -1,11 +1,11 @@
 import { Item } from 'payload-types'
-import { GearSlots, GearState, WeaponSlot } from './types'
+import { GearSlot, GearState, WeaponSlot } from './types'
 import { gearScoreTable, rarityShortCode } from './data'
 import { base62ToNumber, numberToBase62 } from '@/common/utils/base62Operators'
 
 // Helper function to find the first available slot
-export const findFirstAvailableSlot = (state: GearState, item: Item): keyof GearState | null => {
-  const slotTypeMapping: { [key: string]: GearSlots[] } = {
+export const findFirstAvailableSlot = (state: GearState, item: Item): GearSlot | null => {
+  const slotTypeMapping: { [key: string]: GearSlot[] } = {
     ring: ['ring1', 'ring2'],
     utility: ['utility1', 'utility2', 'utility3', 'utility4', 'utility5', 'utility6'],
   }
@@ -14,7 +14,7 @@ export const findFirstAvailableSlot = (state: GearState, item: Item): keyof Gear
   if (slots) {
     for (const slot of slots) {
       // @ts-ignore
-      if (state[slot].item === null) {
+      if (state.slots[slot].item === null) {
         return slot
       }
     }
@@ -33,27 +33,27 @@ export const findFirstAvailableSlot = (state: GearState, item: Item): keyof Gear
       return false
     }
 
-    if (state.weapon1 && !checkTwoHandedConflict(state.weapon1)) {
-      if (state.weapon1.primaryWeapon.item === null && item.slot === 'primaryWeapon') {
+    if (state.slots.weapon1 && !checkTwoHandedConflict(state.slots.weapon1)) {
+      if (state.slots.weapon1.primaryWeapon.item === null && item.slot === 'primaryWeapon') {
         return 'weapon1'
       }
       if (
-        state.weapon1.secondaryWeapon.item === null &&
+        state.slots.weapon1.secondaryWeapon.item === null &&
         item.slot === 'secondaryWeapon' &&
-        state.weapon1.primaryWeapon.item?.handType !== 'twoHanded'
+        state.slots.weapon1.primaryWeapon.item?.handType !== 'twoHanded'
       ) {
         return 'weapon1'
       }
     }
 
-    if (state.weapon2 && !checkTwoHandedConflict(state.weapon2)) {
-      if (state.weapon2.primaryWeapon.item === null && item.slot === 'primaryWeapon') {
+    if (state.slots.weapon2 && !checkTwoHandedConflict(state.slots.weapon2)) {
+      if (state.slots.weapon2.primaryWeapon.item === null && item.slot === 'primaryWeapon') {
         return 'weapon2'
       }
       if (
-        state.weapon2.secondaryWeapon.item === null &&
+        state.slots.weapon2.secondaryWeapon.item === null &&
         item.slot === 'secondaryWeapon' &&
-        state.weapon2.primaryWeapon.item?.handType !== 'twoHanded'
+        state.slots.weapon2.primaryWeapon.item?.handType !== 'twoHanded'
       ) {
         return 'weapon2'
       }
@@ -62,7 +62,7 @@ export const findFirstAvailableSlot = (state: GearState, item: Item): keyof Gear
     return null
   }
 
-  return item.slot as keyof GearState
+  return item.slot as GearSlot
 }
 
 export const getGearScore = (item: Item | null | undefined, rarity: string | null): number => {
