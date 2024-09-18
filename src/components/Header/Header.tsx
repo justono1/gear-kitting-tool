@@ -1,17 +1,12 @@
 'use client'
 
+import { useGear } from '@/providers/GearProvider/GearProvider'
 import css from './Header.module.scss'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useMemo, useState, useCallback, useEffect } from 'react'
 
 export default function Header() {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const origin = typeof window !== 'undefined' && window.location.origin
-
-  const shareUrl = useMemo(() => {
-    return `${origin}/share?${searchParams}`
-  }, [pathname, searchParams, origin])
+  const { shareUrl, selectedCharacterClass } = useGear()
 
   const [copied, setCopied] = useState(false)
 
@@ -25,12 +20,12 @@ export default function Header() {
       .catch((err) => {
         console.error('Failed to copy: ', err)
       })
-  }, [shareUrl])
+  }, [shareUrl, selectedCharacterClass])
 
   // Reset copied state when shareUrl changes
   useEffect(() => {
     setCopied(false)
-  }, [shareUrl])
+  }, [shareUrl, selectedCharacterClass])
 
   return (
     <header className={css.header}>

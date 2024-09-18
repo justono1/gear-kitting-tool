@@ -184,6 +184,7 @@ interface GearContextValue {
   setSelectedCharacterClass: React.Dispatch<React.SetStateAction<CharacterClass>>
   selectedCharacterPerks: CharacterPerks
   setSelectedCharacterPerks: React.Dispatch<React.SetStateAction<CharacterPerks>>
+  shareUrl: string
 }
 
 // Create context
@@ -215,6 +216,7 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const origin = typeof window !== 'undefined' && window.location.origin
 
   const characterClassRouteData = searchParams.get('class')
 
@@ -241,6 +243,15 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
   const previousCharacterClassRouteData = usePrevious(characterClassRouteData)
   const gearRouteData = searchParams.get('gear')
   const previousGearRouteData = usePrevious(gearRouteData)
+
+  const shareUrl = useMemo(() => {
+    const encodedState = encodeGearState(state)
+    const newSearchParams = new URLSearchParams(searchParams.toString())
+    newSearchParams.set('class', selectedCharacterClass)
+    newSearchParams.set('gear', encodedState)
+
+    return `${origin}/share?${newSearchParams.toString()}`
+  }, [pathname, searchParams, origin, state])
 
   // Sync state to localStorage whenever it changes
   useEffect(() => {
@@ -325,6 +336,7 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
       setSelectedCharacterClass,
       selectedCharacterPerks,
       setSelectedCharacterPerks,
+      shareUrl,
     }),
     [
       state,
@@ -340,6 +352,7 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
       setSelectedCharacterClass,
       selectedCharacterPerks,
       setSelectedCharacterPerks,
+      shareUrl,
     ],
   )
 
