@@ -56,6 +56,7 @@ const initialState: GearState = {
 const UPDATE_SLOT = 'UPDATE_SLOT'
 const DELETE_SLOT = 'DELETE_SLOT'
 const DELETE_WEAPON = 'DELETE_WEAPON'
+const HYDRATE_FROM_LOCAL_STORAGE = 'HYDRATE_FROM_LOCAL_STORAGE'
 
 // Define the shape of the actions
 interface UpdateSlotAction {
@@ -84,7 +85,16 @@ interface DeleteWeaponAction {
   }
 }
 
-type GearAction = UpdateSlotAction | DeleteSlotAction | DeleteWeaponAction
+interface HydrateFromLocalStorageAction {
+  type: typeof HYDRATE_FROM_LOCAL_STORAGE
+  payload: GearState
+}
+
+type GearAction =
+  | UpdateSlotAction
+  | DeleteSlotAction
+  | DeleteWeaponAction
+  | HydrateFromLocalStorageAction
 
 // Create reducer
 const gearReducer = (state: GearState, action: GearAction): GearState => {
@@ -149,6 +159,8 @@ const gearReducer = (state: GearState, action: GearAction): GearState => {
         ...state,
         [action.payload.slot]: weaponSlot,
       }
+    case 'HYDRATE_FROM_LOCAL_STORAGE':
+      return { ...state, ...action.payload }
     default:
       return state
   }
@@ -184,14 +196,19 @@ interface GearProviderProps {
 }
 
 export const GearProvider = ({ children, itemData }: GearProviderProps) => {
-  const [state, dispatch] = useReducer(gearReducer, initialState, (initial) => {
+  const [state, dispatch] = useReducer(gearReducer, initialState)
+
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedState = localStorage.getItem('gearState')
-      return savedState ? JSON.parse(savedState) : initial
-    }
+      const hydratedInitialState = savedState ? JSON.parse(savedState) : initialState
 
-    return initial;
-  })
+      dispatch({
+        type: HYDRATE_FROM_LOCAL_STORAGE,
+        payload: hydratedInitialState,
+      })
+    }
+  }, [])
 
   const refs = useRef<{ [key: string]: RefObject<HTMLDivElement> }>({})
 
@@ -229,7 +246,10 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('gearState', JSON.stringify(state))
-      localStorage.setItem('gearStateVersion', `${process.env.NEXT_PUBLIC_GEAR_STATE_LOCAL_STORAGE_VERSION}`)
+      localStorage.setItem(
+        'gearStateVersion',
+        `${process.env.NEXT_PUBLIC_GEAR_STATE_LOCAL_STORAGE_VERSION}`,
+      )
     }
   }, [state])
 
@@ -269,53 +289,6 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
   const registerRef = (key: string, ref: RefObject<HTMLDivElement>) => {
     refs.current[key] = ref
   }
-
-  // Gear Route Setter
-  // useEffect(() => {
-  //   const encodedState = encodeGearState(state)
-  //   const newSearchParams = new URLSearchParams(searchParams.toString())
-  //   newSearchParams.set('class', selectedCharacterClass)
-  //   newSearchParams.set('gear', encodedState)
-
-  //   router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false })
-
-  //   setIsGearRouteInitialized(true)
-  // }, [state, searchParams, pathname, router, selectedCharacterClass])
-
-  // Gear Route Loader
-  // useEffect(() => {
-  //   const isSameGearData = gearRouteData === previousGearRouteData
-
-  //   if (itemData && gearRouteData && !isSameGearData && !isGearRouteInitialized) {
-  //     const splitGearData = gearRouteData.split('-')
-
-  //     splitGearData.forEach((gearItem) => {
-  //       const decodedItem = decodeItem(gearItem)
-  //       if (decodedItem.shortId && decodedItem.rarity) {
-  //         const foundItem = itemData.filter((item) => item.shortId === decodedItem.shortId)
-  //         if (foundItem.length === 1) {
-  //           //should only find one or none
-  //           updateSlot(foundItem[0], decodedItem.rarity)
-  //         }
-  //       }
-  //     })
-  //   }
-
-  //   if (characterClassRouteData && characterClassRouteData !== previousCharacterClassRouteData) {
-  //     setSelectedCharacterClass(characterClassRouteData as CharacterClass)
-  //   }
-  // }, [
-  //   state,
-  //   itemData,
-  //   gearRouteData,
-  //   previousGearRouteData,
-  //   updateSlot,
-  //   characterClassRouteData,
-  //   previousCharacterClassRouteData,
-  //   setSelectedCharacterClass,
-  //   setIsGearRouteInitialized,
-  //   isGearRouteInitialized,
-  // ])
 
   // Method to calculate the current gear score
   const currentGearScore = useMemo(() => {
