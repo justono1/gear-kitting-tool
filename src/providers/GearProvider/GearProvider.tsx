@@ -148,7 +148,10 @@ const gearReducer = (state: GearState, action: GearAction): GearState => {
     case DELETE_SLOT:
       return {
         ...state,
-        [action.payload.slot]: { item: null, rarity: null },
+        slots: {
+          ...state.slots,
+          [action.payload.slot]: { item: null, rarity: null },
+        },
       }
     case DELETE_WEAPON:
       const weaponSlot = { ...state.slots[action.payload.slot] } as WeaponSlot
@@ -166,7 +169,10 @@ const gearReducer = (state: GearState, action: GearAction): GearState => {
 
       return {
         ...state,
-        [action.payload.slot]: weaponSlot,
+        slots: {
+          ...state.slots,
+          [action.payload.slot]: weaponSlot,
+        },
       }
     case 'HYDRATE_FROM_LOCAL_STORAGE':
       return { ...state, ...action.payload }
