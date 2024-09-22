@@ -28,6 +28,7 @@ interface SingleSlotProps {
   itemRarity: string | null
   className?: string
   onLeftClick?: MouseEventHandler<HTMLDivElement>
+  isLocked?: boolean
 }
 
 export default function SingleSlot({
@@ -37,6 +38,7 @@ export default function SingleSlot({
   itemRarity,
   className,
   onLeftClick,
+  isLocked = false,
 }: SingleSlotProps) {
   const [isOpen, setIsOpen] = useState(false)
   const { deleteSlot } = useGear()
@@ -62,7 +64,9 @@ export default function SingleSlot({
   }, [item])
 
   const handleSlotRightCLick = () => {
-    deleteSlot(slotSlug)
+    if (!isLocked) {
+      deleteSlot(slotSlug)
+    }
   }
 
   return (

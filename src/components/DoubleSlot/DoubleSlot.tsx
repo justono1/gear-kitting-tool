@@ -26,6 +26,7 @@ interface DoubleSlotProps {
   slotSlug: 'weapon1' | 'weapon2'
   className?: string
   onLeftClick?: MouseEventHandler<HTMLDivElement>
+  isLocked?: boolean
 }
 
 export default function DoubleSlot({
@@ -36,6 +37,7 @@ export default function DoubleSlot({
   slotSlug,
   className,
   onLeftClick,
+  isLocked = false,
 }: DoubleSlotProps) {
   const { deleteWeapon } = useGear()
   const [leftItemIsOpen, setLeftItemIsOpen] = useState(false)
@@ -101,7 +103,9 @@ export default function DoubleSlot({
 
   const handleSlotRightCLick = (event: any, weaponType: 'primaryWeapon' | 'secondaryWeapon') => {
     event.preventDefault()
-    deleteWeapon(slotSlug, weaponType)
+    if (!isLocked) {
+      deleteWeapon(slotSlug, weaponType)
+    }
   }
 
   return (

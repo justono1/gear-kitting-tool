@@ -22,7 +22,7 @@ export default async function Page() {
         <Header />
         <section className={css.gridContainer}>
           <div className={css.slotColumn}>
-            <ClassLayout />
+            <ClassLayout isLocked={true} />
           </div>
         </section>
       </GearProvider>

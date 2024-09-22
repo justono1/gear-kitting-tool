@@ -9,7 +9,11 @@ import Progress from '../Progress/Progress'
 
 const maxGearScore = 830
 
-export default function ClassLayout() {
+interface ClassLayoutProps {
+  isLocked?: boolean
+}
+
+export default function ClassLayout({ isLocked = false }: ClassLayoutProps) {
   const {
     state,
     currentGearScore,
@@ -19,7 +23,7 @@ export default function ClassLayout() {
   } = useGear()
 
   const handleSlotClick = (slot: string) => {
-    if (slot) {
+    if (slot && !isLocked) {
       setMarketBrowserTabsIsOpen({
         ...marketBrowserTabsIsOpen,
         [slot]: true,
@@ -51,6 +55,7 @@ export default function ClassLayout() {
           rightItem={state.slots.weapon1?.secondaryWeapon?.item}
           rightItemRarity={state.slots.weapon1?.secondaryWeapon?.rarity}
           onLeftClick={() => handleSlotClick('primaryWeapon')}
+          isLocked={isLocked}
         />
         <DoubleSlot
           className={classes([css.classSlot, css.weapon2])}
@@ -60,6 +65,7 @@ export default function ClassLayout() {
           rightItem={state.slots.weapon2?.secondaryWeapon?.item}
           rightItemRarity={state.slots.weapon2?.secondaryWeapon?.rarity}
           onLeftClick={() => handleSlotClick('primaryWeapon')}
+          isLocked={isLocked}
         />
 
         <SingleSlot
@@ -69,6 +75,7 @@ export default function ClassLayout() {
           item={state.slots.head?.item}
           itemRarity={state.slots.head?.rarity}
           onLeftClick={() => handleSlotClick('head')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'tiny'}
@@ -77,6 +84,7 @@ export default function ClassLayout() {
           item={state.slots.necklace?.item}
           itemRarity={state.slots.necklace?.rarity}
           onLeftClick={() => handleSlotClick('necklace')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'medium'}
@@ -85,6 +93,7 @@ export default function ClassLayout() {
           item={state.slots.hands?.item}
           itemRarity={state.slots.hands?.rarity}
           onLeftClick={() => handleSlotClick('hands')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'large'}
@@ -93,6 +102,7 @@ export default function ClassLayout() {
           item={state.slots.chest?.item}
           itemRarity={state.slots.chest?.rarity}
           onLeftClick={() => handleSlotClick('chest')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'medium'}
@@ -101,6 +111,7 @@ export default function ClassLayout() {
           item={state.slots.back?.item}
           itemRarity={state.slots.back?.rarity}
           onLeftClick={() => handleSlotClick('back')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'tiny'}
@@ -109,6 +120,7 @@ export default function ClassLayout() {
           item={state.slots.ring1?.item}
           itemRarity={state.slots.ring1?.rarity}
           onLeftClick={() => handleSlotClick('ring')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'large'}
@@ -117,6 +129,7 @@ export default function ClassLayout() {
           item={state.slots.legs?.item}
           itemRarity={state.slots.legs?.rarity}
           onLeftClick={() => handleSlotClick('legs')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'tiny'}
@@ -125,6 +138,7 @@ export default function ClassLayout() {
           item={state.slots.ring2?.item}
           itemRarity={state.slots.ring2?.rarity}
           onLeftClick={() => handleSlotClick('ring')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'medium'}
@@ -133,6 +147,7 @@ export default function ClassLayout() {
           item={state.slots.feet?.item}
           itemRarity={state.slots.feet?.rarity}
           onLeftClick={() => handleSlotClick('feet')}
+          isLocked={isLocked}
         />
 
         <SingleSlot
@@ -142,6 +157,7 @@ export default function ClassLayout() {
           item={state.slots.utility1?.item}
           itemRarity={state.slots.utility1?.rarity}
           onLeftClick={() => handleSlotClick('utility')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'small'}
@@ -150,6 +166,7 @@ export default function ClassLayout() {
           item={state.slots.utility2?.item}
           itemRarity={state.slots.utility2?.rarity}
           onLeftClick={() => handleSlotClick('utility')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'small'}
@@ -158,6 +175,7 @@ export default function ClassLayout() {
           item={state.slots.utility3?.item}
           itemRarity={state.slots.utility3?.rarity}
           onLeftClick={() => handleSlotClick('utility')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'small'}
@@ -166,6 +184,7 @@ export default function ClassLayout() {
           item={state.slots.utility4?.item}
           itemRarity={state.slots.utility4?.rarity}
           onLeftClick={() => handleSlotClick('utility')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'small'}
@@ -174,6 +193,7 @@ export default function ClassLayout() {
           item={state.slots.utility5?.item}
           itemRarity={state.slots.utility5?.rarity}
           onLeftClick={() => handleSlotClick('utility')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'small'}
@@ -182,6 +202,7 @@ export default function ClassLayout() {
           item={state.slots.utility6?.item}
           itemRarity={state.slots.utility6?.rarity}
           onLeftClick={() => handleSlotClick('utility')}
+          isLocked={isLocked}
         />
       </div>
     </section>
