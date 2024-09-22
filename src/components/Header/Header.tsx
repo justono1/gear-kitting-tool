@@ -30,7 +30,7 @@ export default function Header() {
   return (
     <header className={css.header}>
       <h1>
-        Gear Kitting Tool <small>v0.1</small>
+        Gear Kitting Tool <small>v0.2</small>
       </h1>
       <div className={css.shareBox}>
         {copied && <span className={css.copiedMessage}>Kit Saved To Clipboard!</span>}

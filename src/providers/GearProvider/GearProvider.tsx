@@ -22,7 +22,8 @@ import {
   CharacterPerks,
 } from './types'
 import { decodeItem, encodeGearState, findFirstAvailableSlot, getGearScore } from './utils'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
+import { usePrevious } from '@/common/hooks/usePrevious'
 
 // Define the initial state
 const initialState: GearState = {
@@ -209,35 +210,28 @@ const GearContext = createContext<GearContextValue | undefined>(undefined)
 interface GearProviderProps {
   itemData: Item[]
   children: ReactNode
+  mode?: 'default' | 'share'
 }
 
-export const GearProvider = ({ children, itemData }: GearProviderProps) => {
+export const GearProvider = ({ children, itemData, mode = 'default' }: GearProviderProps) => {
   const [state, dispatch] = useReducer(gearReducer, initialState)
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedState = localStorage.getItem('gearState')
-      const hydratedInitialState = savedState ? JSON.parse(savedState) : initialState
-
-      dispatch({
-        type: HYDRATE_FROM_LOCAL_STORAGE,
-        payload: hydratedInitialState,
-      })
-    }
-  }, [])
-
   const refs = useRef<{ [key: string]: RefObject<HTMLDivElement> }>({})
 
-  const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const origin = typeof window !== 'undefined' && window.location.origin
 
   const characterClassRouteData = searchParams.get('class')
-
   const [selectedCharacterClass, setSelectedCharacterClass] = useState<CharacterClass>(
     characterClassRouteData ? (characterClassRouteData as CharacterClass) : 'fighter',
   )
+
+  const [isGearRouteInitialized, setIsGearRouteInitialized] = useState(false)
+
+  const previousCharacterClassRouteData = usePrevious(characterClassRouteData)
+  const gearRouteData = searchParams.get('gear')
+  const previousGearRouteData = usePrevious(gearRouteData)
+
   const [selectedCharacterPerks, setSelectedCharacterPerks] = useState<CharacterPerks>(null)
   const [marketBrowserTabsIsOpen, setMarketBrowserTabsIsOpen] = useState<MarketBrowserTabsIsOpen>({
     primaryWeapon: false,
@@ -252,6 +246,47 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
     feet: false,
     utility: false,
   })
+
+  useEffect(() => {
+    // We do not want to hydrate GearProvider state from localStorage on the share page
+    // We want to hydrate a local gear state from the router using the decode method
+    if (typeof window !== 'undefined' && mode !== 'share') {
+      const savedState = localStorage.getItem('gearState')
+      // TODO: one dat will need to add in version check and possible local storage migrations
+      const hydratedInitialState = savedState ? JSON.parse(savedState) : initialState
+
+      dispatch({
+        type: HYDRATE_FROM_LOCAL_STORAGE,
+        payload: hydratedInitialState,
+      })
+    }
+  }, [])
+
+  useEffect(() => {
+    // If the mode is share then we want to hydrate the state from the url instead of localStorage
+    if (mode === 'share') {
+      const isSameGearData = gearRouteData === previousGearRouteData
+
+      if (itemData && gearRouteData && !isSameGearData && !isGearRouteInitialized) {
+        const splitGearData = gearRouteData.split('-')
+
+        splitGearData.forEach((gearItem) => {
+          const decodedItem = decodeItem(gearItem)
+          if (decodedItem.shortId && decodedItem.rarity) {
+            const foundItem = itemData.filter((item) => item.shortId === decodedItem.shortId)
+            if (foundItem.length === 1) {
+              //should only find one or none
+              updateSlot(foundItem[0], decodedItem.rarity)
+            }
+          }
+        })
+      }
+
+      if (characterClassRouteData && characterClassRouteData !== previousCharacterClassRouteData) {
+        setSelectedCharacterClass(characterClassRouteData as CharacterClass)
+      }
+    }
+  }, [gearRouteData, previousGearRouteData, itemData, isGearRouteInitialized])
 
   const shareUrl = useMemo(() => {
     const encodedState = encodeGearState(state)
@@ -317,7 +352,8 @@ export const GearProvider = ({ children, itemData }: GearProviderProps) => {
   // Method to calculate the current gear score
   const currentGearScore = useMemo(() => {
     let totalScore = 0
-    for (const slot of Object.keys(state) as GearSlot[]) {
+
+    for (const slot of Object.keys(state.slots) as GearSlot[]) {
       if (slot === 'weapon1' || slot === 'weapon2') {
         totalScore += getGearScore(
           state.slots[slot].primaryWeapon?.item,

@@ -18,12 +18,9 @@ export default async function Page() {
 
   return (
     <Suspense fallback={<div>Loading</div>}>
-      <GearProvider itemData={itemData}>
+      <GearProvider itemData={itemData} mode={'share'}>
         <Header />
         <section className={css.gridContainer}>
-          <div className={css.itemColumn}>
-            <MarketBrowser data={itemData} />
-          </div>
           <div className={css.slotColumn}>
             <ClassLayout />
           </div>
