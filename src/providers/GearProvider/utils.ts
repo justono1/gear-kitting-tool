@@ -93,7 +93,7 @@ export const encodeGearState = (state: GearState): string => {
         // @ts-ignore
         state.slots[key].secondaryWeapon.item && state.slots[key].secondaryWeapon.rarity
           ? // @ts-ignore
-            `${rarityShortCode[state[key].secondaryWeapon.rarity]}${numberToBase62(
+            `${rarityShortCode[state.slots[key].secondaryWeapon.rarity]}${numberToBase62(
               // @ts-ignore
               state.slots[key].secondaryWeapon.item.shortId,
             )}`
