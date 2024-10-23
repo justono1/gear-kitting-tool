@@ -9,7 +9,11 @@ import Progress from '../Progress/Progress'
 
 const maxGearScore = 830
 
-export default function ClassLayout() {
+interface ClassLayoutProps {
+  isLocked?: boolean
+}
+
+export default function ClassLayout({ isLocked = false }: ClassLayoutProps) {
   const {
     state,
     currentGearScore,
@@ -19,7 +23,7 @@ export default function ClassLayout() {
   } = useGear()
 
   const handleSlotClick = (slot: string) => {
-    if (slot) {
+    if (slot && !isLocked) {
       setMarketBrowserTabsIsOpen({
         ...marketBrowserTabsIsOpen,
         [slot]: true,
@@ -46,142 +50,159 @@ export default function ClassLayout() {
         <DoubleSlot
           className={classes([css.classSlot, css.weapon1])}
           slotSlug={'weapon1'}
-          leftItem={state.weapon1?.primaryWeapon?.item}
-          leftItemRarity={state.weapon1?.primaryWeapon?.rarity}
-          rightItem={state.weapon1?.secondaryWeapon?.item}
-          rightItemRarity={state.weapon1?.secondaryWeapon?.rarity}
+          leftItem={state.slots.weapon1?.primaryWeapon?.item}
+          leftItemRarity={state.slots.weapon1?.primaryWeapon?.rarity}
+          rightItem={state.slots.weapon1?.secondaryWeapon?.item}
+          rightItemRarity={state.slots.weapon1?.secondaryWeapon?.rarity}
           onLeftClick={() => handleSlotClick('primaryWeapon')}
+          isLocked={isLocked}
         />
         <DoubleSlot
           className={classes([css.classSlot, css.weapon2])}
           slotSlug={'weapon2'}
-          leftItem={state.weapon2?.primaryWeapon?.item}
-          leftItemRarity={state.weapon2?.primaryWeapon?.rarity}
-          rightItem={state.weapon2?.secondaryWeapon?.item}
-          rightItemRarity={state.weapon2?.secondaryWeapon?.rarity}
+          leftItem={state.slots.weapon2?.primaryWeapon?.item}
+          leftItemRarity={state.slots.weapon2?.primaryWeapon?.rarity}
+          rightItem={state.slots.weapon2?.secondaryWeapon?.item}
+          rightItemRarity={state.slots.weapon2?.secondaryWeapon?.rarity}
           onLeftClick={() => handleSlotClick('primaryWeapon')}
+          isLocked={isLocked}
         />
 
         <SingleSlot
           slotSize={'medium'}
           className={classes([css.classSlot, css.head])}
           slotSlug={'head'}
-          item={state.head?.item}
-          itemRarity={state.head?.rarity}
+          item={state.slots.head?.item}
+          itemRarity={state.slots.head?.rarity}
           onLeftClick={() => handleSlotClick('head')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'tiny'}
           className={classes([css.classSlot, css.necklace])}
           slotSlug={'necklace'}
-          item={state.necklace?.item}
-          itemRarity={state.necklace?.rarity}
+          item={state.slots.necklace?.item}
+          itemRarity={state.slots.necklace?.rarity}
           onLeftClick={() => handleSlotClick('necklace')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'medium'}
           className={classes([css.classSlot, css.hands])}
           slotSlug={'hands'}
-          item={state.hands?.item}
-          itemRarity={state.hands?.rarity}
+          item={state.slots.hands?.item}
+          itemRarity={state.slots.hands?.rarity}
           onLeftClick={() => handleSlotClick('hands')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'large'}
           className={classes([css.classSlot, css.chest])}
           slotSlug={'chest'}
-          item={state.chest?.item}
-          itemRarity={state.chest?.rarity}
+          item={state.slots.chest?.item}
+          itemRarity={state.slots.chest?.rarity}
           onLeftClick={() => handleSlotClick('chest')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'medium'}
           className={classes([css.classSlot, css.back])}
           slotSlug={'back'}
-          item={state.back?.item}
-          itemRarity={state.back?.rarity}
+          item={state.slots.back?.item}
+          itemRarity={state.slots.back?.rarity}
           onLeftClick={() => handleSlotClick('back')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'tiny'}
           className={classes([css.classSlot, css.ring1])}
           slotSlug={'ring1'}
-          item={state.ring1?.item}
-          itemRarity={state.ring1?.rarity}
+          item={state.slots.ring1?.item}
+          itemRarity={state.slots.ring1?.rarity}
           onLeftClick={() => handleSlotClick('ring')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'large'}
           className={classes([css.classSlot, css.legs])}
           slotSlug={'legs'}
-          item={state.legs?.item}
-          itemRarity={state.legs?.rarity}
+          item={state.slots.legs?.item}
+          itemRarity={state.slots.legs?.rarity}
           onLeftClick={() => handleSlotClick('legs')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'tiny'}
           className={classes([css.classSlot, css.ring2])}
           slotSlug={'ring2'}
-          item={state.ring2?.item}
-          itemRarity={state.ring2?.rarity}
+          item={state.slots.ring2?.item}
+          itemRarity={state.slots.ring2?.rarity}
           onLeftClick={() => handleSlotClick('ring')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'medium'}
           className={classes([css.classSlot, css.feet])}
           slotSlug={'feet'}
-          item={state.feet?.item}
-          itemRarity={state.feet?.rarity}
+          item={state.slots.feet?.item}
+          itemRarity={state.slots.feet?.rarity}
           onLeftClick={() => handleSlotClick('feet')}
+          isLocked={isLocked}
         />
 
         <SingleSlot
           slotSize={'small'}
           className={classes([css.classSlot, css.utility1])}
           slotSlug={'utility1'}
-          item={state.utility1?.item}
-          itemRarity={state.utility1?.rarity}
+          item={state.slots.utility1?.item}
+          itemRarity={state.slots.utility1?.rarity}
           onLeftClick={() => handleSlotClick('utility')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'small'}
           className={classes([css.classSlot, css.utility2])}
           slotSlug={'utility2'}
-          item={state.utility2?.item}
-          itemRarity={state.utility2?.rarity}
+          item={state.slots.utility2?.item}
+          itemRarity={state.slots.utility2?.rarity}
           onLeftClick={() => handleSlotClick('utility')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'small'}
           className={classes([css.classSlot, css.utility3])}
           slotSlug={'utility3'}
-          item={state.utility3?.item}
-          itemRarity={state.utility3?.rarity}
+          item={state.slots.utility3?.item}
+          itemRarity={state.slots.utility3?.rarity}
           onLeftClick={() => handleSlotClick('utility')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'small'}
           className={classes([css.classSlot, css.utility4])}
           slotSlug={'utility4'}
-          item={state.utility4?.item}
-          itemRarity={state.utility4?.rarity}
+          item={state.slots.utility4?.item}
+          itemRarity={state.slots.utility4?.rarity}
           onLeftClick={() => handleSlotClick('utility')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'small'}
           className={classes([css.classSlot, css.utility5])}
           slotSlug={'utility5'}
-          item={state.utility5?.item}
-          itemRarity={state.utility5?.rarity}
+          item={state.slots.utility5?.item}
+          itemRarity={state.slots.utility5?.rarity}
           onLeftClick={() => handleSlotClick('utility')}
+          isLocked={isLocked}
         />
         <SingleSlot
           slotSize={'small'}
           className={classes([css.classSlot, css.utility6])}
           slotSlug={'utility6'}
-          item={state.utility6?.item}
-          itemRarity={state.utility6?.rarity}
+          item={state.slots.utility6?.item}
+          itemRarity={state.slots.utility6?.rarity}
           onLeftClick={() => handleSlotClick('utility')}
+          isLocked={isLocked}
         />
       </div>
     </section>

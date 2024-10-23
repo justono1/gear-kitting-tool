@@ -5,6 +5,7 @@ import { getPayload } from '@/common/utils/payload'
 import MarketBrowser from '@/components/MarketBrowser/MarketBrowser'
 import Header from '@/components/Header/Header'
 import { GearProvider } from '@/providers/GearProvider/GearProvider'
+import KitDetail from '@/components/KitDetail/KitDetail'
 
 export default async function Page() {
   const payload = await getPayload()
@@ -18,14 +19,14 @@ export default async function Page() {
 
   return (
     <Suspense fallback={<div>Loading</div>}>
-      <GearProvider itemData={itemData}>
+      <GearProvider itemData={itemData} mode={'share'}>
         <Header />
         <section className={css.gridContainer}>
           <div className={css.itemColumn}>
-            <MarketBrowser data={itemData} />
+            <KitDetail />
           </div>
           <div className={css.slotColumn}>
-            <ClassLayout />
+            <ClassLayout isLocked={true} />
           </div>
         </section>
       </GearProvider>
