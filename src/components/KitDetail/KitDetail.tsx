@@ -5,6 +5,7 @@ import css from './KitDetail.module.scss'
 import { GearSlot } from '@/providers/GearProvider/types'
 import { camelCaseToTitleCase } from '@/common/utils/slugToHuman'
 import classes from 'classnames'
+import { getGearScore } from '@/providers/GearProvider/utils'
 
 export default function KitDetail() {
   const { state } = useGear()
@@ -16,32 +17,43 @@ export default function KitDetail() {
         // @ts-ignore
         const slotData = state.slots[key]
 
-        if (key === 'weapon1' || key == 'weapon2') {
-        }
-
         return (
           <div key={`kitDetail-${key}`} className={css.slotDetail}>
-            <h3>{camelCaseToTitleCase(key)}</h3>
+            <h3 className={css.slotHeader}>{camelCaseToTitleCase(key)}</h3>
             {key === 'weapon1' || key == 'weapon2' ? (
               <>
                 <p className={slotData.secondaryWeapon?.item ? css.primaryWeapon : ''}>
                   Primary Weapon:{' '}
                   <span className={classes(css.slotValue, css.ml)}>
-                    {slotData?.primaryWeapon?.item?.itemName}
+                    {slotData?.primaryWeapon?.item?.itemName} - Gear Score:{' '}
+                    {getGearScore(slotData?.primaryWeapon?.item, slotData.primaryWeapon.rarity)}
                   </span>
                 </p>
                 {slotData.secondaryWeapon?.item && (
                   <p>
                     Secondary Weapon:{' '}
                     <span className={classes(css.slotValue, css.ml)}>
-                      {slotData?.secondaryWeapon?.item?.itemName}
+                      {slotData?.secondaryWeapon?.item?.itemName} - Gear Score:{' '}
+                      {getGearScore(
+                        slotData?.secondaryWeapon?.item,
+                        slotData.secondaryWeapon.rarity,
+                      )}
                     </span>
                   </p>
                 )}
               </>
             ) : (
               <p>
-                <span className={css.slotValue}>{slotData?.item?.itemName}</span>
+                <span className={css.slotValue}>
+                  {slotData?.item?.itemName ? (
+                    <>
+                      {slotData?.item?.itemName} - Gear Score:{' '}
+                      {getGearScore(slotData?.item, slotData?.rarity)}
+                    </>
+                  ) : (
+                    'N/A'
+                  )}
+                </span>
               </p>
             )}
           </div>

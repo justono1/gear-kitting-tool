@@ -1,25 +1,22 @@
 @import '@/scss/variables.scss';
 
+.slotHeader {
+  border-bottom: 1px solid $color-gray-3;
+}
+
 .slotDetail {
   p {
     margin-top: 5px;
     margin-bottom: 15px;
+    font-size: 14px;
+    font-weight: bold;
     &.primaryWeapon {
       margin-bottom: 5px;
     }
   }
 
   .slotValue {
-    vertical-align: middle;
-    background: $color-gray-2;
-    border: 1px solid $color-gray-3;
-    padding: 10px;
-    font-size: 0.9em;
-    display: inline-block;
-    min-width: 100px;
-    min-height: 40px;
-    &.ml {
-      margin-left: 5px;
-    }
+    font-weight: normal;
+    font-size: 14px;
   }
 }
