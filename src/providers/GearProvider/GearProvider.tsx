@@ -94,11 +94,14 @@ interface HydrateFromLocalStorageAction {
   payload: GearState
 }
 
+const RESET_LOCAL_STORAGE = 'RESET_LOCAL_STORAGE'
+
 type GearAction =
   | UpdateSlotAction
   | DeleteSlotAction
   | DeleteWeaponAction
   | HydrateFromLocalStorageAction
+  | { type: typeof RESET_LOCAL_STORAGE }
 
 // Create reducer
 const gearReducer = (state: GearState, action: GearAction): GearState => {
@@ -177,6 +180,8 @@ const gearReducer = (state: GearState, action: GearAction): GearState => {
       }
     case 'HYDRATE_FROM_LOCAL_STORAGE':
       return { ...state, ...action.payload }
+    case RESET_LOCAL_STORAGE:
+      return initialState
     default:
       return state
   }
@@ -191,6 +196,7 @@ interface GearContextValue {
     slot: 'weapon1' | 'weapon2',
     weaponType: 'primaryWeapon' | 'secondaryWeapon',
   ) => void
+  resetLocalStorage: () => void
   currentGearScore: number
   marketBrowserTabsIsOpen: MarketBrowserTabsIsOpen
   setMarketBrowserTabsIsOpen: React.Dispatch<React.SetStateAction<MarketBrowserTabsIsOpen>>
@@ -370,12 +376,24 @@ export const GearProvider = ({ children, itemData, mode = 'default' }: GearProvi
     return totalScore
   }, [state])
 
+  const resetLocalStorage = useCallback(() => {
+    // Clear localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('gearState')
+      localStorage.removeItem('gearStateVersion')
+    }
+
+    // Reset state to initial
+    dispatch({ type: RESET_LOCAL_STORAGE })
+  }, [])
+
   const contextValue = useMemo(
     () => ({
       state,
       updateSlot,
       deleteSlot,
       deleteWeapon,
+      resetLocalStorage,
       currentGearScore,
       marketBrowserTabsIsOpen,
       setMarketBrowserTabsIsOpen,
@@ -392,6 +410,7 @@ export const GearProvider = ({ children, itemData, mode = 'default' }: GearProvi
       updateSlot,
       deleteSlot,
       deleteWeapon,
+      resetLocalStorage,
       currentGearScore,
       marketBrowserTabsIsOpen,
       setMarketBrowserTabsIsOpen,

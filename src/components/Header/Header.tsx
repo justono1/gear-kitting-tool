@@ -4,11 +4,15 @@ import { useGear } from '@/providers/GearProvider/GearProvider'
 import css from './Header.module.scss'
 import { useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export default function Header() {
-  const { shareUrl, selectedCharacterClass } = useGear()
+  const { shareUrl, selectedCharacterClass, resetLocalStorage } = useGear()
+  const pathname = usePathname()
 
   const [copied, setCopied] = useState(false)
+
+  const isSharePage = pathname === '/share'
 
   // Function to copy the URL to clipboard
   const copyToClipboard = useCallback(() => {
@@ -37,6 +41,11 @@ export default function Header() {
       </h1>
       <div className={css.shareBox}>
         {copied && <span className={css.copiedMessage}>Kit Saved To Clipboard!</span>}
+        {!isSharePage && (
+          <button className={css.button} onClick={resetLocalStorage}>
+            Reset Kit
+          </button>
+        )}
         <button className={css.button} onClick={copyToClipboard}>
           Share Kit
         </button>
