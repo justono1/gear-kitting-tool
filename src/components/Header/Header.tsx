@@ -2,8 +2,8 @@
 
 import { useGear } from '@/providers/GearProvider/GearProvider'
 import css from './Header.module.scss'
-import { usePathname, useSearchParams } from 'next/navigation'
-import { useMemo, useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
+import Link from 'next/link'
 
 export default function Header() {
   const { shareUrl, selectedCharacterClass } = useGear()
@@ -30,7 +30,10 @@ export default function Header() {
   return (
     <header className={css.header}>
       <h1>
-        Gear Kitting Tool <small>v0.2</small>
+        <Link className={'h1'} href="/">
+          Gear Kitting Tool
+        </Link>{' '}
+        <small>v0.2</small>
       </h1>
       <div className={css.shareBox}>
         {copied && <span className={css.copiedMessage}>Kit Saved To Clipboard!</span>}
